@@ -110,6 +110,8 @@ class Assets {
 			$localization = '';
 			$current_lang = '';
 			$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
+			$service_string = isset($settings['chat-genesys-v9-service']) ? $settings['chat-genesys-v9-service'] : '';
+			$dataURL = isset($settings['chat-genesys-v9-data-url']) ? $settings['chat-genesys-v9-data-url'] : '';
 			if (function_exists('pll_current_language')) {
 				$current_lang = pll_current_language();
 				if (in_array($current_lang, $allowed)) {
@@ -128,7 +130,7 @@ class Assets {
 					$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
 				}
 			}
-			if (isset($settings['chat-genesys-v9-service']) && isset($settings['chat-genesys-v9-data-url']) && !empty($localization) && ($other_langs_enabled || in_array($current_lang, $allowed))) {
+			if (!empty($service_string) && !empty($dataURL) && !empty($localization) && ($other_langs_enabled || in_array($current_lang, $allowed))) {
 				wp_enqueue_script(
 					'genesys-v9-base',
 					'https://apps.mypurecloud.ie/widgets/9.0/cxbus.min.js',
@@ -145,8 +147,8 @@ class Assets {
 					false
 				);	
 				wp_localize_script('genesys-v9', 'genesys_settings', array(
-					'service_string' => isset($settings['chat-genesys-v9-service']) ? $settings['chat-genesys-v9-service'] : '',
-					'dataURL' => isset($settings['chat-genesys-v9-data-url']) ? $settings['chat-genesys-v9-data-url'] : '',
+					'service_string' => $service_string,
+					'dataURL' => $dataURL,
 					'localization' => $localization,
 					'language_code' => in_array($current_lang, $allowed) ? $current_lang : 'en'
 				) );
