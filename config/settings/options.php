@@ -28,7 +28,7 @@ return array(
             'id' => 'chat-genesys-v9',
             'name' => __('Genesys v9 Settings', 'helsinki-chat'),
             'page' => 'helsinki-chat-settings',
-            'description' => __('Configure Genesys v9 parameters.', 'helsinki-chat'),
+            'description' => __('Configure Genesys v9 parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
             'options' => array(
                 array(
                     'id' => 'chat-genesys-v9-service',
@@ -44,6 +44,7 @@ return array(
                     'id' => 'chat-genesys-v9-localization',
                     'name' => __('Localization', 'helsinki-chat'),
                     'type' => 'multiple-text',
+                    'description' => __('Localisation determines the chat\'s text-contents and language. Chat will only be displayed for languages which have their localisation provided.', 'helsinki-chat'),
                     'fields' => array(
                         'fi' => __('Finnish', 'helsinki-chat'),
                         'en' => __('English', 'helsinki-chat'),

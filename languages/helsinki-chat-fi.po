@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Helsinki Chat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-06 08:58+0000\n"
-"PO-Revision-Date: 2022-09-06 09:02+0000\n"
+"PO-Revision-Date: 2022-09-13 12:26+0000\n"
 "Last-Translator: \n"
-"Language-Team: Finnish\n"
+"Language-Team: Suomi\n"
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -28,22 +28,26 @@ msgid "Chat"
 msgstr "Chat"
 
 #: config/settings/options.php:31
-msgid "Configure Genesys v9 parameters."
-msgstr "Konfiguroi Genesys v9 -chatin parametrit."
+msgid ""
+"Configure Genesys v9 parameters. Please request the chat-service provider "
+"for the information to the fields below."
+msgstr ""
+"Konfiguroi Genesys v9 -chatin parametrit. Kysy chat-palveluntuottajalta "
+"tiedot alle oleviin kenttiin."
 
 #: config/settings/options.php:40
 msgid "Data URL"
 msgstr "Data URL"
 
-#: config/settings/options.php:55
+#: config/settings/options.php:56
 msgid "Enable chat for other languages"
 msgstr "Aktivoi chatti muille kielille"
 
-#: config/settings/options.php:49
+#: config/settings/options.php:50
 msgid "English"
 msgstr "Englanti"
 
-#: config/settings/options.php:57
+#: config/settings/options.php:58
 msgid ""
 "English chat will be displayed for other languages. Localization must be set "
 "for English."
@@ -51,7 +55,7 @@ msgstr ""
 "Englanti-chatti esitetään muille kielille. Englanninkielinen lokalisaatio "
 "pitää olla asetettu."
 
-#: config/settings/options.php:48
+#: config/settings/options.php:49
 msgid "Finnish"
 msgstr "Suomi"
 
@@ -72,6 +76,14 @@ msgstr "Helsinki Chat"
 msgid "https://www.broomudigitals.fi"
 msgstr "https://www.broomudigitals.fi"
 
+#: config/settings/options.php:47
+msgid ""
+"Localisation determines the chat's text-contents and language. Chat will "
+"only be displayed for languages which have their localisation provided."
+msgstr ""
+"Lokalisaatio määrittää chatin tekstien sisällöt ja kielen. Chat näytetään "
+"vain niillä kielillä, joille on asetettu lokalisaatio."
+
 #: config/settings/options.php:45
 msgid "Localization"
 msgstr "Lokalisaatio"
@@ -84,6 +96,6 @@ msgstr "Tallenna asetukset"
 msgid "Service string"
 msgstr "Chatin tunniste"
 
-#: config/settings/options.php:50
+#: config/settings/options.php:51
 msgid "Swedish"
 msgstr "Ruotsi"

@@ -195,16 +195,19 @@ function chat_settings_input(array $args) {
         echo '<ul>';
         foreach ($args['fields'] as $key => $field) {
             printf(
-                '<li><label for="%s">%s</label><input class="regular-text" name="%s[%s]" type="text" id="%s" %s>%s</li>',
+                '<li><label for="%s">%s</label><input class="regular-text" name="%s[%s]" type="text" id="%s" %s></li>',
                 $args['id'] . '-' . $key,
                 $field,
                 $args['page'],
                 $args['id'] . '-' . $key,
                 $args['id'] . '-' . $key,
-                isset($settings[$args['id'].'-'.$key]) ? 'value="'.$settings[$args['id'].'-'.$key].'"' : '',
-                $description
+                isset($settings[$args['id'].'-'.$key]) ? 'value="'.$settings[$args['id'].'-'.$key].'"' : ''
             );    
         }
+        printf(
+            '%s',
+            $description
+        );
         echo '</ul>';
     }
     else if ($args['type'] === 'select') {
