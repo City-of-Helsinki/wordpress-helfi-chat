@@ -1,5 +1,6 @@
 <?php
 namespace CityOfHelsinki\WordPress\Chat;
+use ArtCloud\Helsinki\Plugin\HDS\Svg;
 
 class Assets {
 	public $minified;
@@ -109,27 +110,27 @@ class Assets {
 			);
 			$localization = '';
 			$current_lang = '';
+			$chat_name = '';
 			$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
 			$service_string = isset($settings['chat-genesys-v9-service']) ? $settings['chat-genesys-v9-service'] : '';
 			$dataURL = isset($settings['chat-genesys-v9-data-url']) ? $settings['chat-genesys-v9-data-url'] : '';
+
 			if (function_exists('pll_current_language')) {
 				$current_lang = pll_current_language();
-				if (in_array($current_lang, $allowed)) {
-					$localization = isset($settings['chat-genesys-v9-localization-' . $current_lang]) ? $settings['chat-genesys-v9-localization-' . $current_lang] : '';
-				}
-				else {
-					$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
-				}
 			}
 			else {
 				$current_lang = substr( get_bloginfo('language'), 0, 2 );
-				if (in_array($current_lang, $allowed)) {
-					$localization = isset($settings['chat-genesys-v9-localization-' . $current_lang]) ? $settings['chat-genesys-v9-localization-' . $current_lang] : '';
-				}
-				else {
-					$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
-				}
 			}
+
+			if (in_array($current_lang, $allowed)) {
+				$chat_name = isset($settings['chat-genesys-v9-name-' . $current_lang]) ? $settings['chat-genesys-v9-name-' . $current_lang] : '';
+				$localization = isset($settings['chat-genesys-v9-localization-' . $current_lang]) ? $settings['chat-genesys-v9-localization-' . $current_lang] : '';
+			}
+			else {
+				$chat_name = isset($settings['chat-genesys-v9-name-en']) ? $settings['chat-genesys-v9-name-en'] : '';
+				$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
+			}
+
 			if (!empty($service_string) && !empty($dataURL) && !empty($localization) && ($other_langs_enabled || in_array($current_lang, $allowed))) {
 				wp_enqueue_script(
 					'genesys-v9-base',
@@ -147,10 +148,14 @@ class Assets {
 					false
 				);	
 				wp_localize_script('genesys-v9', 'genesys_settings', array(
+					'chat_name' => $chat_name,
+					'chat_aria_label' => __('Start chat', 'helsinki-chat'),
 					'service_string' => $service_string,
 					'dataURL' => $dataURL,
 					'localization' => $localization,
-					'language_code' => in_array($current_lang, $allowed) ? $current_lang : 'en'
+					'language_code' => in_array($current_lang, $allowed) ? $current_lang : 'en',
+					'chat_icon' => class_exists(Svg::class) ? Svg::icon('forms-data', 'speechbubble-text') : '',
+					'chat_arrow_icon' => class_exists(Svg::class) ? Svg::icon('arrows-operators', 'angle-up') : ''
 				) );
 
 				wp_enqueue_style(

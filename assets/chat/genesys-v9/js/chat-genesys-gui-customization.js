@@ -195,8 +195,8 @@
         // // var mobileIksButton = '<div id="gwc-chat-icon-iks-mobile"' + 
         // //             'tabindex="0" onkeypress="onEnter(event, this)" role="button" onclick="removeChatIcon()"><img src="https://www.hel.fi/static/helsinki/chat/close-next.svg" /></div>'
 
-        var buttonHtml = '<div class="cx-widget cx-webchat-chat-button ' + helFiChat_button + ' cx-side-button" id="chatButtonStart" role="button" tabindex="0" data-message="ChatButton"' +
-                    'data-gcb-service-node="true"><span class="cx-icon" data-icon="chat"></span><span class="i18n cx-chat-button-label" data-message="ChatButton"></span></div>'
+        var buttonHtml = '<div class="genesys-hds-chat-button" id="chatButtonStart" role="button" tabindex="0" data-message="ChatButton" ' +
+                    'data-gcb-service-node="true"><span>' + genesys_settings.chat_icon + '</span><span class="screen-reader-text">' + genesys_settings.chat_aria_label + ': </span><span class="i18n cx-chat-button-label" aria-label="' + genesys_settings.chat_name + '">' + genesys_settings.chat_name + '</span><span>' + genesys_settings.chat_arrow_icon + '</span></div>'
          return buttonHtml;
     }
 
