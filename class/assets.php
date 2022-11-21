@@ -148,7 +148,7 @@ class Assets {
 					false
 				);	
 				wp_localize_script('genesys-v9', 'genesys_settings', array(
-					'chat_name' => $chat_name,
+					'chat_name' => !empty($chat_name) ? $chat_name : __('Start chat', 'helsinki-chat'),
 					'chat_aria_label' => __('Start chat', 'helsinki-chat'),
 					'service_string' => $service_string,
 					'dataURL' => $dataURL,
