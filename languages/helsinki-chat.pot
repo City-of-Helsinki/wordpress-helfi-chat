@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Helsinki Chat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-13 12:25+0000\n"
+"POT-Creation-Date: 2022-11-18 11:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -28,31 +28,39 @@ msgstr ""
 msgid "Chat"
 msgstr ""
 
+#: config/settings/options.php:35
+msgid "Chat name"
+msgstr ""
+
+#: config/settings/options.php:37
+msgid "Chat name will be displayed on the button to start the chat."
+msgstr ""
+
 #: config/settings/options.php:31
 msgid ""
 "Configure Genesys v9 parameters. Please request the chat-service provider "
 "for the information to the fields below."
 msgstr ""
 
-#: config/settings/options.php:40
+#: config/settings/options.php:51
 msgid "Data URL"
 msgstr ""
 
-#: config/settings/options.php:56
+#: config/settings/options.php:67
 msgid "Enable chat for other languages"
 msgstr ""
 
-#: config/settings/options.php:50
+#: config/settings/options.php:40 config/settings/options.php:61
 msgid "English"
 msgstr ""
 
-#: config/settings/options.php:58
+#: config/settings/options.php:69
 msgid ""
 "English chat will be displayed for other languages. Localization must be set "
 "for English."
 msgstr ""
 
-#: config/settings/options.php:49
+#: config/settings/options.php:39 config/settings/options.php:60
 msgid "Finnish"
 msgstr ""
 
@@ -73,13 +81,13 @@ msgstr ""
 msgid "https://www.broomudigitals.fi"
 msgstr ""
 
-#: config/settings/options.php:47
+#: config/settings/options.php:58
 msgid ""
 "Localisation determines the chat's text-contents and language. Chat will "
 "only be displayed for languages which have their localisation provided."
 msgstr ""
 
-#: config/settings/options.php:45
+#: config/settings/options.php:56
 msgid "Localization"
 msgstr ""
 
@@ -87,10 +95,14 @@ msgstr ""
 msgid "Save settings"
 msgstr ""
 
-#: config/settings/options.php:35
+#: config/settings/options.php:46
 msgid "Service string"
 msgstr ""
 
-#: config/settings/options.php:51
+#: class/assets.php:152
+msgid "Start chat"
+msgstr ""
+
+#: config/settings/options.php:41 config/settings/options.php:62
 msgid "Swedish"
 msgstr ""

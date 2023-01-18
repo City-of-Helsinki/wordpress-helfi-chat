@@ -5,3 +5,47 @@
         }
     }
 }
+
+.cx-widget {
+    .cx-side-button-group {
+        max-width: calc(100vw - 24px);
+        bottom: 16px;
+        right: 16px;
+
+        @include breakpoint('xs') {
+            bottom: 24px;
+        }
+
+        @include breakpoint('s') {
+            right: 24px;
+        }
+
+        @include breakpoint('m') {
+            bottom: 32px;
+            right: 24px;
+        }
+
+
+
+        .genesys-hds-chat-button {
+            display: flex;
+            grid-gap: 16px;
+            gap: 16px;
+            border: 2px solid rgb(255, 255, 255);
+            border-radius: 8px;
+            background: #000000;
+            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+            color: $white;
+            padding: 11px 16px;
+            font-family: "Helsinki Grotesk","Helsinki Avoin Sans",Arial,sans-serif;
+            font-size: 20px;
+            font-weight: normal;
+            line-height: 30px;
+            align-items: center;
+
+            .cx-chat-button-label {
+                white-space: initial;
+            }
+        }
+    }
+}

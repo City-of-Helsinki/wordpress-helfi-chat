@@ -31,6 +31,17 @@ return array(
             'description' => __('Configure Genesys v9 parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
             'options' => array(
                 array(
+                    'id' => 'chat-genesys-v9-name',
+                    'name' => __('Chat name', 'helsinki-chat'),
+                    'type' => 'multiple-text',
+                    'description' => __('Chat name will be displayed on the button to start the chat.', 'helsinki-chat'),
+                    'fields' => array(
+                        'fi' => __('Finnish', 'helsinki-chat'),
+                        'en' => __('English', 'helsinki-chat'),
+                        'sv' => __('Swedish', 'helsinki-chat'),
+                    )
+                ),
+                array(
                     'id' => 'chat-genesys-v9-service',
                     'name' => __('Service string', 'helsinki-chat'),
                     'type' => 'text'
