@@ -13,7 +13,7 @@ class Assets {
 			add_action( 'admin_enqueue_scripts', array( $this, 'adminStyles' ), 1 );
 		}
 		else {
-			add_action( 'wp_enqueue_scripts', array( $this, 'publicScripts' ), 1 );
+			//add_action( 'wp_enqueue_scripts', array( $this, 'publicScripts' ), 1 ); //no public scripts yet
 			add_action( 'wp_enqueue_scripts', array( $this, 'publicStyles' ), 2 );
 			add_action( 'wp_enqueue_scripts', array( $this, 'chatScripts' ), 1 );
 			add_filter('script_loader_tag', array( $this, 'filterScript' ), 10, 3 );
@@ -68,7 +68,7 @@ class Assets {
 		wp_enqueue_script(
 			'chat-wp-admin-scripts',
 			$this->assetUrl('admin', 'scripts', $this->minified, 'js'),
-			apply_filters( 'chat_admin_scripts_dependencies', array() ),
+			apply_filters( 'chat_admin_scripts_dependencies', array('wp-dom-ready') ),
 			$this->assetVersion( $this->assetPath('admin', 'scripts', $this->minified, 'js') ),
 			true
 		);
@@ -100,7 +100,6 @@ class Assets {
 		if (isset($settings['chat-selection'])) {
 			$chat = $settings['chat-selection'];
 		}
-
 
 		if ($chat === 'genesys-v9') {
 			$allowed = array(

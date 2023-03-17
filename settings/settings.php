@@ -110,7 +110,7 @@ function chat_register_settings() {
 }
 
 function chat_settings_add_section($section) {
-    add_settings_section($section['id'], $section['name'], function() use ($section) { if (isset($section['description'])) { chat_settings_section_description($section['description']); } }, $section['page']);
+    add_settings_section($section['id'], $section['name'], function() use ($section) { if (isset($section['description'])) { chat_settings_section_description($section['description']); } }, $section['page'], array('before_section' => '<div class="helsinki-chat-settings-section helsinki-chat-section-'. $section['id'] .'">', 'after_section' => '</div>'));
     foreach ($section['options'] as $option) {
         chat_settings_add_option($option, $section['id'], $section['page']);
     }
@@ -157,7 +157,7 @@ function chat_settings_input(array $args) {
                 $value = 'checked';
             }
         }
-        else if ($args['type'] === 'textarea' || $args['type'] === 'editor') {
+        else if ($args['type'] === 'textarea' || $args['type'] === 'editor' || $args['type'] === 'select') {
             $value = esc_attr($option);
         }
         else {

@@ -12,8 +12,11 @@ return array(
                     'name' => __('Chat', 'helsinki-chat'),
                     'type' => 'select',
                     'description' => __('', 'helsinki-chat'),
-                    'default' => 'on',
                     'values' => array(
+                        array(
+                            'name' => __('Disabled', 'helsinki-chat'),
+                            'value' => 'disabled'
+                        ),
                         array(
                             'name' => 'Genesys v9',
                             'value' => 'genesys-v9'

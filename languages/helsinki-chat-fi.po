@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Helsinki Chat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-06 08:58+0000\n"
-"PO-Revision-Date: 2022-11-18 11:07+0000\n"
+"PO-Revision-Date: 2023-03-01 11:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: Suomi\n"
 "Language: fi\n"
@@ -27,15 +27,15 @@ msgstr "Broomu Digitals"
 msgid "Chat"
 msgstr "Chat"
 
-#: config/settings/options.php:35
+#: config/settings/options.php:38
 msgid "Chat name"
 msgstr "Chatin nimi"
 
-#: config/settings/options.php:37
+#: config/settings/options.php:40
 msgid "Chat name will be displayed on the button to start the chat."
 msgstr "Chatin nimi määrittää chat-leijukkeen tekstin."
 
-#: config/settings/options.php:31
+#: config/settings/options.php:34
 msgid ""
 "Configure Genesys v9 parameters. Please request the chat-service provider "
 "for the information to the fields below."
@@ -43,19 +43,23 @@ msgstr ""
 "Konfiguroi Genesys v9 -chatin parametrit. Kysy chat-palveluntuottajalta "
 "tiedot alle oleviin kenttiin."
 
-#: config/settings/options.php:51
+#: config/settings/options.php:54
 msgid "Data URL"
 msgstr "Data URL"
 
-#: config/settings/options.php:67
+#: config/settings/options.php:17
+msgid "Disabled"
+msgstr "Ei käytössä"
+
+#: config/settings/options.php:70
 msgid "Enable chat for other languages"
 msgstr "Aktivoi chatti muille kielille"
 
-#: config/settings/options.php:40 config/settings/options.php:61
+#: config/settings/options.php:43 config/settings/options.php:64
 msgid "English"
 msgstr "Englanti"
 
-#: config/settings/options.php:69
+#: config/settings/options.php:72
 msgid ""
 "English chat will be displayed for other languages. Localization must be set "
 "for English."
@@ -63,7 +67,7 @@ msgstr ""
 "Englanti-chatti esitetään muille kielille. Englanninkielinen lokalisaatio "
 "pitää olla asetettu."
 
-#: config/settings/options.php:39 config/settings/options.php:60
+#: config/settings/options.php:42 config/settings/options.php:63
 msgid "Finnish"
 msgstr "Suomi"
 
@@ -71,7 +75,7 @@ msgstr "Suomi"
 msgid "General"
 msgstr "Yleinen"
 
-#: config/settings/options.php:29
+#: config/settings/options.php:32
 msgid "Genesys v9 Settings"
 msgstr "Genesys v9 Asetukset"
 
@@ -84,7 +88,7 @@ msgstr "Helsinki Chat"
 msgid "https://www.broomudigitals.fi"
 msgstr "https://www.broomudigitals.fi"
 
-#: config/settings/options.php:58
+#: config/settings/options.php:61
 msgid ""
 "Localisation determines the chat's text-contents and language. Chat will "
 "only be displayed for languages which have their localisation provided."
@@ -92,7 +96,7 @@ msgstr ""
 "Lokalisaatio määrittää chatin tekstien sisällöt ja kielen. Chat näytetään "
 "vain niillä kielillä, joille on asetettu lokalisaatio."
 
-#: config/settings/options.php:56
+#: config/settings/options.php:59
 msgid "Localization"
 msgstr "Lokalisaatio"
 
@@ -100,14 +104,14 @@ msgstr "Lokalisaatio"
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
-#: config/settings/options.php:46
+#: config/settings/options.php:49
 msgid "Service string"
 msgstr "Chatin tunniste"
 
-#: class/assets.php:152
+#: class/assets.php:150 class/assets.php:151
 msgid "Start chat"
 msgstr "Aloita chatti"
 
-#: config/settings/options.php:41 config/settings/options.php:62
+#: config/settings/options.php:44 config/settings/options.php:65
 msgid "Swedish"
 msgstr "Ruotsi"
