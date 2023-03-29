@@ -14,8 +14,8 @@ $tabs = array();
 
 function chat_settings_page() {
     add_menu_page(
-        __('Helsinki Chat', 'helsinki-chat'),
-        __('Helsinki Chat', 'helsinki-chat'),
+        __('Chat', 'helsinki-chat'),
+        __('Chat', 'helsinki-chat'),
         apply_filters(
             'helsinki_chat_settings_page_capability_requirement',
             'manage_options'
