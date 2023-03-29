@@ -18,7 +18,7 @@ namespace CityOfHelsinki\WordPress\Chat;
 /**
  * Constants
 */
-define( __NAMESPACE__ . '\\PLUGIN_VERSION', '1.2.0' );
+define( __NAMESPACE__ . '\\PLUGIN_VERSION', '1.3.0' );
 define( __NAMESPACE__ . '\\PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( __NAMESPACE__ . '\\PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( __NAMESPACE__ . '\\PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
