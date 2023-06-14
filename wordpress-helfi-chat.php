@@ -4,7 +4,7 @@
   * Plugin Name: Helsinki Chat
   * Description: Adds chat integrations for various chat services.
   * Version: 1.3.0
-  * License: MIT
+  * License: GPLv3
   * Requires at least: 5.7
   * Requires PHP:      7.1
   * Author: Broomu Digitals
