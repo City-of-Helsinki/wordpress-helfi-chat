@@ -121,6 +121,10 @@
         fill: white;
     }
 
+    .cx-theme-helsinki-blue svg.mask-icon {
+        background-color: white;
+    }
+
     .cx-theme-helsinki-blue .cx-bubble-arrow svg {
         fill: #0000BF;
     }
