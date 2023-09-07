@@ -178,6 +178,22 @@ function chat_settings_input(array $args) {
             $description
         );
     }
+    else if ($args['type'] === 'combobox') {
+        printf(
+            '<div class="helsinki-chat-combobox-container" id="%s-container">
+                <input class="helsinki-chat-combobox-input" type="hidden" name="%s[%s]" id="%s" %s>
+                <div class="helsinki-chat-combobox-controller" id="%s-controller"></div>
+                %s
+            </div>',
+            $args['id'],
+            $args['page'],
+            $args['id'],
+            $args['id'],
+            $value,
+            $args['id'],
+            $description
+        );
+    }
     else if ($args['type'] === 'editor') {
         wp_editor(
             html_entity_decode($value),
