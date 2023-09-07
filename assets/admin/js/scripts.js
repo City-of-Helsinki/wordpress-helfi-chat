@@ -89,7 +89,6 @@ wp.domReady(function () {
       optionsNames: optionsNames
     });
     var root = wp.element.createRoot(document.getElementById(id + '-controller'));
-    console.log(control);
     root.render(control);
   }
 
