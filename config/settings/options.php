@@ -20,8 +20,35 @@ return array(
                         array(
                             'name' => 'Genesys v9',
                             'value' => 'genesys-v9'
-                        )
+                        ),
+                        array(
+                            'name' => 'Genesys+Watson',
+                            'value' => 'genesys-watson'
+                        ),
                     )
+                ),
+                array(
+                    'id' => 'chat-visibility',
+                    'name' => __('Chat visibility', 'helsinki-chat'),
+                    'type' => 'select',
+                    'description' => __('', 'helsinki-chat'),
+                    'values' => array(
+                        array(
+                            'name' => __('Show on all pages', 'helsinki-chat'),
+                            'value' => 'all'
+                        ),
+                        array(
+                            'name' => __('Show on selected pages', 'helsinki-chat'),
+                            'value' => 'selected'
+                        ),
+                    )
+                ),
+                array(
+                    'id' => 'chat-pages',
+                    'name' => __('Selected pages', 'helsinki-chat'),
+                    'type' => 'combobox',
+                    'class' => 'helsinki-chat-settings-chat-pages',
+                    'description' => __('Search for a page by name', 'helsinki-chat'),
                 ),
             ),
         ),
@@ -29,9 +56,9 @@ return array(
 	'genesys-v9' => array(
         array(
             'id' => 'chat-genesys-v9',
-            'name' => __('Genesys v9 Settings', 'helsinki-chat'),
+            'name' => __('Settings', 'helsinki-chat'),
             'page' => 'helsinki-chat-settings',
-            'description' => __('Configure Genesys v9 parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
+            'description' => __('Configure the chat service\'s parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
             'options' => array(
                 array(
                     'id' => 'chat-genesys-v9-name',
@@ -75,4 +102,27 @@ return array(
             ),
         ),
 	),
+    'genesys-watson' => array(
+        array(
+            'id' => 'chat-genesys-watson',
+            'name' => __('Settings', 'helsinki-chat'),
+            'page' => 'helsinki-chat-settings',
+            'description' => __('Configure the chat service\'s parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
+            'options' => array(
+                array(
+                    'id' => 'chat-genesys-watson-identifier',
+                    'name' => __('Chat identifiers', 'helsinki-chat'),
+                    'type' => 'multiple-text',
+                    'description' => '',
+                    'fields' => array(
+                        'hostname' => 'hostname',
+                        'engagementId' => 'engagementId',
+                        'tenantId' => 'tenantId',
+                        'assistantId' => 'assistantId',
+                    )
+                ),
+
+            ),
+        ),
+    ),
 );
