@@ -6,7 +6,7 @@ class Assets {
 	public $minified;
 
 	public function init() {
-		$this->minified = (defined('WP_DEBUG') && true === WP_DEBUG) ? '' : 'min';
+		$this->minified = (defined('WP_DEBUG') && true === WP_DEBUG) ? '' : '';
 
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'adminScripts' ), 1 );
@@ -72,13 +72,46 @@ class Assets {
 			$this->assetVersion( $this->assetPath('admin', 'scripts', $this->minified, 'js') ),
 			true
 		);
+
+		wp_set_script_translations( 'chat-wp-admin-scripts', 'helsinki-chat', PLUGIN_PATH . 'languages');
+
+		wp_localize_script( 'chat-wp-admin-scripts', 'helsinkiChatSettings', array(
+			'pages' => $this->get_pages(),
+		));
+	}
+
+	public function get_pages() {
+		$pages = array();
+		$pages_query = new \WP_Query( array(
+			'post_type' => 'page',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+			'post_status' => 'publish',
+			'suppress_filters' => false,
+			'lang' => '',
+		) );
+
+		if ( $pages_query->have_posts() ) {
+			while ( $pages_query->have_posts() ) {
+				$pages_query->the_post();
+				$pages[] = array(
+					'id' => get_the_ID(),
+					'title' => get_the_title(),
+				);
+			}
+		}
+
+		wp_reset_postdata();
+
+		return $pages;
 	}
 
 	public function adminStyles( string $hook ) {
 		wp_enqueue_style(
 			'chat-wp-admin-styles',
 			$this->assetUrl('admin', 'styles', $this->minified, 'css'),
-			apply_filters( 'chat_admin_styles_dependencies', array() ),
+			apply_filters( 'chat_admin_styles_dependencies', array('wp-components') ),
 			$this->assetVersion( $this->assetPath('admin', 'styles', $this->minified, 'css') ),
 			'all'
 		);
@@ -99,6 +132,27 @@ class Assets {
 		$chat = '';
 		if (isset($settings['chat-selection'])) {
 			$chat = $settings['chat-selection'];
+		}
+
+		$visibility = 'all';
+		if (isset($settings['chat-visibility'])) {
+			$visibility = $settings['chat-visibility'];
+		}
+
+		$selectedPages = array();
+		if (isset($settings['chat-pages'])) {
+			$selectedPages = explode(',', $settings['chat-pages']);
+		}
+
+		$current_page_id = '';
+		if (is_front_page()) {
+			$current_page_id = get_option('page_on_front');
+		} else {
+			$current_page_id = get_the_ID();
+		}
+
+		if ($visibility === 'selected' && !in_array($current_page_id, $selectedPages)) {
+			return;
 		}
 
 		if ($chat === 'genesys-v9') {
@@ -165,6 +219,28 @@ class Assets {
 					'all'
 				);
 		
+			}
+		}
+		else if ($chat === "genesys-watson") {
+			$hostname = isset($settings['chat-genesys-watson-identifier-hostname']) ? $settings['chat-genesys-watson-identifier-hostname'] : '';
+			$engagementId = isset($settings['chat-genesys-watson-identifier-engagementId']) ? $settings['chat-genesys-watson-identifier-engagementId'] : '';
+			$tenantId = isset($settings['chat-genesys-watson-identifier-tenantId']) ? $settings['chat-genesys-watson-identifier-tenantId'] : '';
+			$assistantId = isset($settings['chat-genesys-watson-identifier-assistantId']) ? $settings['chat-genesys-watson-identifier-assistantId'] : '';
+		
+			if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
+				wp_enqueue_script(
+					'genesys-watson',
+					sprintf(
+						'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
+						$hostname,
+						$tenantId,
+						$assistantId,
+						$engagementId
+					),
+					apply_filters( 'genesys_watson_scripts_dependencies', array('jquery') ),
+					PLUGIN_VERSION,
+					false
+				);
 			}
 		}
 	}
