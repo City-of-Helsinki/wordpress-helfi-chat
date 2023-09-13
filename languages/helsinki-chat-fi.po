@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Helsinki Chat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-06 08:58+0000\n"
-"PO-Revision-Date: 2023-03-01 11:37+0000\n"
+"PO-Revision-Date: 2023-09-07 06:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: Suomi\n"
 "Language: fi\n"
@@ -15,6 +15,10 @@ msgstr ""
 "X-Loco-Version: 2.6.0; wp-6.0.2\n"
 "X-Domain: helsinki-chat"
 
+#: assets/admin/js/scripts.js:107 src/admin/js/chat-settings.js:72
+msgid "Add a new page"
+msgstr "Lisää uusi sivu"
+
 #. Description of the plugin
 msgid "Adds chat integrations for various chat services."
 msgstr "Lisää chat-integraatioita eri chat-palveluille."
@@ -23,27 +27,39 @@ msgstr "Lisää chat-integraatioita eri chat-palveluille."
 msgid "Broomu Digitals"
 msgstr "Broomu Digitals"
 
+#: settings/settings.php:17 settings/settings.php:18
 #: config/settings/options.php:12
 msgid "Chat"
 msgstr "Chat"
 
-#: config/settings/options.php:38
+#: config/settings/options.php:113
+msgid "Chat identifiers"
+msgstr "Chatin tunnisteet"
+
+#: config/settings/options.php:64
 msgid "Chat name"
 msgstr "Chatin nimi"
 
-#: config/settings/options.php:40
+#: config/settings/options.php:66
 msgid "Chat name will be displayed on the button to start the chat."
 msgstr "Chatin nimi määrittää chat-leijukkeen tekstin."
 
-#: config/settings/options.php:34
-msgid ""
-"Configure Genesys v9 parameters. Please request the chat-service provider "
-"for the information to the fields below."
-msgstr ""
-"Konfiguroi Genesys v9 -chatin parametrit. Kysy chat-palveluntuottajalta "
-"tiedot alle oleviin kenttiin."
+#: config/settings/options.php:32
+msgid "Chat visibility"
+msgstr "Chatin näkyvyys"
 
-#: config/settings/options.php:54
+#: config/settings/options.php:60 config/settings/options.php:109
+#| msgid ""
+#| "Configure Genesys v9 parameters. Please request the chat-service provider "
+#| "for the information to the fields below."
+msgid ""
+"Configure the chat service's parameters. Please request the chat-service "
+"provider for the information to the fields below."
+msgstr ""
+"Konfiguroi chat-palvelun parametrit. Kysy tarvittaessa chat-"
+"palveluntuottajalta tiedot alle oleviin kenttiin."
+
+#: config/settings/options.php:80
 msgid "Data URL"
 msgstr "Data URL"
 
@@ -51,15 +67,15 @@ msgstr "Data URL"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
-#: config/settings/options.php:70
+#: config/settings/options.php:96
 msgid "Enable chat for other languages"
 msgstr "Aktivoi chatti muille kielille"
 
-#: config/settings/options.php:43 config/settings/options.php:64
+#: config/settings/options.php:69 config/settings/options.php:90
 msgid "English"
 msgstr "Englanti"
 
-#: config/settings/options.php:72
+#: config/settings/options.php:98
 msgid ""
 "English chat will be displayed for other languages. Localization must be set "
 "for English."
@@ -67,7 +83,7 @@ msgstr ""
 "Englanti-chatti esitetään muille kielille. Englanninkielinen lokalisaatio "
 "pitää olla asetettu."
 
-#: config/settings/options.php:42 config/settings/options.php:63
+#: config/settings/options.php:68 config/settings/options.php:89
 msgid "Finnish"
 msgstr "Suomi"
 
@@ -75,12 +91,8 @@ msgstr "Suomi"
 msgid "General"
 msgstr "Yleinen"
 
-#: config/settings/options.php:32
-msgid "Genesys v9 Settings"
-msgstr "Genesys v9 Asetukset"
-
 #. Name of the plugin
-#: settings/settings.php:17 settings/settings.php:18 views/settings/page.php:11
+#: views/settings/page.php:11
 msgid "Helsinki Chat"
 msgstr "Helsinki Chat"
 
@@ -88,7 +100,7 @@ msgstr "Helsinki Chat"
 msgid "https://www.broomudigitals.fi"
 msgstr "https://www.broomudigitals.fi"
 
-#: config/settings/options.php:61
+#: config/settings/options.php:87
 msgid ""
 "Localisation determines the chat's text-contents and language. Chat will "
 "only be displayed for languages which have their localisation provided."
@@ -96,7 +108,7 @@ msgstr ""
 "Lokalisaatio määrittää chatin tekstien sisällöt ja kielen. Chat näytetään "
 "vain niillä kielillä, joille on asetettu lokalisaatio."
 
-#: config/settings/options.php:59
+#: config/settings/options.php:85
 msgid "Localization"
 msgstr "Lokalisaatio"
 
@@ -104,14 +116,34 @@ msgstr "Lokalisaatio"
 msgid "Save settings"
 msgstr "Tallenna asetukset"
 
-#: config/settings/options.php:49
+#: config/settings/options.php:50
+msgid "Search for a page by name"
+msgstr "Hae julkaisua nimellä"
+
+#: config/settings/options.php:48
+msgid "Selected pages"
+msgstr "Valitut sivut"
+
+#: config/settings/options.php:75
 msgid "Service string"
 msgstr "Chatin tunniste"
 
-#: class/assets.php:150 class/assets.php:151
+#: config/settings/options.php:58 config/settings/options.php:107
+msgid "Settings"
+msgstr "Asetukset"
+
+#: config/settings/options.php:37
+msgid "Show on all pages"
+msgstr "Näytä kaikilla sivuilla"
+
+#: config/settings/options.php:41
+msgid "Show on selected pages"
+msgstr "Näytä valituilla sivuilla"
+
+#: class/assets.php:197 class/assets.php:198
 msgid "Start chat"
 msgstr "Aloita chatti"
 
-#: config/settings/options.php:44 config/settings/options.php:65
+#: config/settings/options.php:70 config/settings/options.php:91
 msgid "Swedish"
 msgstr "Ruotsi"
