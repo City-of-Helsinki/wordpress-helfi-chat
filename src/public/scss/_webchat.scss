@@ -46,6 +46,10 @@
             line-height: 30px;
             align-items: center;
 
+            &:focus {
+                outline: 3px solid $black;
+            }
+
             .cx-chat-button-label {
                 white-space: initial;
             }
@@ -77,6 +81,11 @@
             right: 24px;
         }
 
+        #chat-app-button {
+            &:focus {
+                outline: 3px solid $black;
+            }
+        }
     }
 
 }
