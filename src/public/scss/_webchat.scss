@@ -63,6 +63,7 @@
         max-width: calc(100vw - 24px);
         bottom: 16px;
         right: 16px;
+        z-index: 5 !important;
 
         @include breakpoint('xs') {
             bottom: 24px;
