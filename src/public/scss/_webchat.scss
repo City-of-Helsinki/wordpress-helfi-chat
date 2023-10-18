@@ -90,3 +90,14 @@
     }
 
 }
+
+/* Telia Ace */
+
+.telia-ace-chat-button {
+    box-sizing: content-box;
+    display: none;
+    
+    &:focus {
+        outline-offset: 2px;
+    }
+}
