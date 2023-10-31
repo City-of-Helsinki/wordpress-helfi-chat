@@ -152,6 +152,17 @@ return array(
                     'name' => __('Service string', 'helsinki-chat'),
                     'type' => 'text'
                 ),
+                array(
+                    'id' => 'chat-telia-ace-localization',
+                    'name' => __('Localization', 'helsinki-chat'),
+                    'type' => 'multiple-text',
+                    'description' => __('Localisation determines the chat\'s text-contents and language. Chat will only be displayed for languages which have their localisation provided.', 'helsinki-chat'),
+                    'fields' => array(
+                        'fi' => __('Finnish', 'helsinki-chat'),
+                        'en' => __('English', 'helsinki-chat'),
+                        'sv' => __('Swedish', 'helsinki-chat'),
+                    )
+                ),
             ),
         )
     )
