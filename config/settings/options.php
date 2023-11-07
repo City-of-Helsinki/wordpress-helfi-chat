@@ -25,6 +25,10 @@ return array(
                             'name' => 'Genesys+Watson',
                             'value' => 'genesys-watson'
                         ),
+                        array(
+                            'name' => 'Telia Ace',
+                            'value' => 'telia-ace'
+                        )
                     )
                 ),
                 array(
@@ -125,4 +129,41 @@ return array(
             ),
         ),
     ),
+    'telia-ace' => array(
+        array(
+            'id' => 'chat-telia-ace',
+            'name' => __('Settings', 'helsinki-chat'),
+            'page' => 'helsinki-chat-settings',
+            'description' => __('Configure the chat service\'s parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
+            'options' => array(
+                array(
+                    'id' => 'chat-telia-ace-name',
+                    'name' => __('Chat name', 'helsinki-chat'),
+                    'type' => 'multiple-text',
+                    'description' => __('Chat name will be displayed on the button to start the chat.', 'helsinki-chat'),
+                    'fields' => array(
+                        'fi' => __('Finnish', 'helsinki-chat'),
+                        'en' => __('English', 'helsinki-chat'),
+                        'sv' => __('Swedish', 'helsinki-chat'),
+                    )
+                ),
+                array(
+                    'id' => 'chat-telia-ace-service',
+                    'name' => __('Service string', 'helsinki-chat'),
+                    'type' => 'text'
+                ),
+                array(
+                    'id' => 'chat-telia-ace-localization',
+                    'name' => __('Localization', 'helsinki-chat'),
+                    'type' => 'multiple-text',
+                    'description' => __('Localisation determines the chat\'s text-contents and language. Chat will only be displayed for languages which have their localisation provided.', 'helsinki-chat'),
+                    'fields' => array(
+                        'fi' => __('Finnish', 'helsinki-chat'),
+                        'en' => __('English', 'helsinki-chat'),
+                        'sv' => __('Swedish', 'helsinki-chat'),
+                    )
+                ),
+            ),
+        )
+    )
 );
