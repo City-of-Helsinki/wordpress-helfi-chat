@@ -9,8 +9,12 @@ class Assets {
 		$this->minified = (defined('WP_DEBUG') && true === WP_DEBUG) ? '' : '';
 
 		if ( is_admin() ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'adminScripts' ), 1 );
-			add_action( 'admin_enqueue_scripts', array( $this, 'adminStyles' ), 1 );
+
+			//is page helsinki-chat-settings
+			if (isset($_GET['page']) && $_GET['page'] === 'helsinki-chat-settings') {
+				add_action( 'admin_enqueue_scripts', array( $this, 'adminScripts' ), 1 );
+				add_action( 'admin_enqueue_scripts', array( $this, 'adminStyles' ), 1 );
+			}
 		}
 		else {
 			//add_action( 'wp_enqueue_scripts', array( $this, 'publicScripts' ), 1 ); //no public scripts yet
