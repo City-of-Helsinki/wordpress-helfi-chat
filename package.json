@@ -35,6 +35,6 @@
     "not ie <= 11"
   ],
   "dependencies": {
-    "@babel/preset-react": "^7.22.5"
+    "@babel/preset-react": "^7.22.15"
   }
 }
