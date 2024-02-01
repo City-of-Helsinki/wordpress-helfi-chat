@@ -295,7 +295,11 @@ class Assets {
 		);
 
 		add_action('wp_footer', function() use ($chat_name, $localization) {
-			$this->telia_ace_chat_button($chat_name, $localization);
+			printf(
+				'<a class="telia-ace-chat-button" href="%s">%s</a>',
+				esc_url( $localization ),
+				esc_html( $chat_name )
+			);
 		});
 	}
 
