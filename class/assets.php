@@ -185,7 +185,6 @@ class Assets {
 			return;
 		}
 
-		$allowed = $this->allowedLanguages();
 		$localization = '';
 		$current_lang = $this->currentLanguage();
 		$chat_name = '';
@@ -271,7 +270,6 @@ class Assets {
 		$localization = '';
 		$current_lang = $this->currentLanguage();
 		$chat_name = '';
-		$allowed = $this->allowedLanguages();
 
 		if ($this->isLanguageAllowed($current_lang)) {
 			$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
