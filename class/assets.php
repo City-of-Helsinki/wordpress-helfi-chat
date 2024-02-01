@@ -224,8 +224,8 @@ class Assets {
 			'dataURL' => $settings['chat-genesys-v9-data-url'],
 			'localization' => $localization,
 			'language_code' => $this->isLanguageAllowed( $current_lang ) ? $current_lang : 'en',
-			'chat_icon' => class_exists(Svg::class) ? Svg::icon('forms-data', 'speechbubble-text') : '',
-			'chat_arrow_icon' => class_exists(Svg::class) ? Svg::icon('arrows-operators', 'angle-up') : ''
+			'chat_icon' => $this->createIcon( 'forms-data', 'speechbubble-text' ),
+			'chat_arrow_icon' => $this->createIcon( 'arrows-operators', 'angle-up' ),
 		) );
 
 		wp_enqueue_style(
@@ -235,6 +235,11 @@ class Assets {
 			$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css') ),
 			'all'
 		);
+	}
+
+	protected function createIcon( string $group, string $name ): string
+	{
+		return class_exists(Svg::class) ? Svg::icon( $group, $name ) : '';
 	}
 
 	protected function chatGenesysWatson( array $settings ): void
