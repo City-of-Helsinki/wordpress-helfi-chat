@@ -160,11 +160,7 @@ class Assets {
 		}
 
 		if ($chat === 'genesys-v9') {
-			$allowed = array(
-				'fi',
-				'en',
-				'sv'
-			);
+			$allowed = $this->allowedLanguages();
 			$localization = '';
 			$current_lang = '';
 			$chat_name = '';
@@ -195,7 +191,7 @@ class Assets {
 					apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
 					PLUGIN_VERSION,
 					false
-				);	
+				);
 
 				wp_enqueue_script(
 					'genesys-v9',
@@ -203,7 +199,7 @@ class Assets {
 					apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
 					$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js') ),
 					false
-				);	
+				);
 				wp_localize_script('genesys-v9', 'genesys_settings', array(
 					'chat_name' => !empty($chat_name) ? $chat_name : __('Start chat', 'helsinki-chat'),
 					'chat_aria_label' => __('Start chat', 'helsinki-chat'),
@@ -222,7 +218,7 @@ class Assets {
 					$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css') ),
 					'all'
 				);
-		
+
 			}
 		}
 		else if ($chat === "genesys-watson") {
@@ -230,7 +226,7 @@ class Assets {
 			$engagementId = isset($settings['chat-genesys-watson-identifier-engagementId']) ? $settings['chat-genesys-watson-identifier-engagementId'] : '';
 			$tenantId = isset($settings['chat-genesys-watson-identifier-tenantId']) ? $settings['chat-genesys-watson-identifier-tenantId'] : '';
 			$assistantId = isset($settings['chat-genesys-watson-identifier-assistantId']) ? $settings['chat-genesys-watson-identifier-assistantId'] : '';
-		
+
 			if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
 				wp_enqueue_script(
 					'genesys-watson',
@@ -252,11 +248,7 @@ class Assets {
 			$localization = '';
 			$current_lang = '';
 			$chat_name = '';
-			$allowed = array(
-				'fi',
-				'en',
-				'sv'
-			);
+			$allowed = $this->allowedLanguages();
 
 			if (function_exists('pll_current_language')) {
 				$current_lang = pll_current_language();
@@ -298,7 +290,7 @@ class Assets {
 	public function filterScript($tag, $handle, $source) {
 		if ( 'genesys-v9-base' === $handle ) {
 			$tag = '<script type="text/javascript" src="' . $source . '" id="' . $handle . '" onload="javascript:CXBus.configure({pluginsPath:\'https://apps.mypurecloud.ie/widgets/9.0/plugins/\'}); CXBus.loadPlugin(\'widgets-core\');"></script>';
-		}		
+		}
 		return $tag;
 	}
 
@@ -312,6 +304,10 @@ class Assets {
 		);
 	}
 
+	protected function allowedLanguages(): array
+	{
+		return array( 'fi', 'en', 'sv' );
+	}
 }
 $assets = new Assets();
 $assets->init();
