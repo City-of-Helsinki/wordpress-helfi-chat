@@ -154,10 +154,6 @@ class Assets {
 		}
 	}
 
-	public function telia_ace_chat_button($chat_name = '', $localization = '') {
-		include str_replace( '\\', DIRECTORY_SEPARATOR, path_to_file('partials\telia-ace\chat-button'));
-	}
-
 	public function filterScript($tag, $handle, $source) {
 		if ( 'genesys-v9-base' === $handle ) {
 			$tag = '<script type="text/javascript" src="' . $source . '" id="' . $handle . '" onload="javascript:CXBus.configure({pluginsPath:\'https://apps.mypurecloud.ie/widgets/9.0/plugins/\'}); CXBus.loadPlugin(\'widgets-core\');"></script>';
