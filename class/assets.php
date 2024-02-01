@@ -234,10 +234,10 @@ class Assets {
 
 	protected function chatGenesysWatson( array $settings ): void
 	{
-		$hostname = isset($settings['chat-genesys-watson-identifier-hostname']) ? $settings['chat-genesys-watson-identifier-hostname'] : '';
-		$engagementId = isset($settings['chat-genesys-watson-identifier-engagementId']) ? $settings['chat-genesys-watson-identifier-engagementId'] : '';
-		$tenantId = isset($settings['chat-genesys-watson-identifier-tenantId']) ? $settings['chat-genesys-watson-identifier-tenantId'] : '';
-		$assistantId = isset($settings['chat-genesys-watson-identifier-assistantId']) ? $settings['chat-genesys-watson-identifier-assistantId'] : '';
+		$hostname = $settings['chat-genesys-watson-identifier-hostname'] ?? '';
+		$engagementId = $settings['chat-genesys-watson-identifier-engagementId'] ?? '';
+		$tenantId = $settings['chat-genesys-watson-identifier-tenantId'] ?? '';
+		$assistantId = $settings['chat-genesys-watson-identifier-assistantId'] ?? '';
 
 		if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
 			wp_enqueue_script(
