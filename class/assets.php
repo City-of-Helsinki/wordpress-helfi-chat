@@ -144,26 +144,7 @@ class Assets {
 			$this->chatGenesysV9( $settings );
 		}
 		else if ($chat === "genesys-watson") {
-			$hostname = isset($settings['chat-genesys-watson-identifier-hostname']) ? $settings['chat-genesys-watson-identifier-hostname'] : '';
-			$engagementId = isset($settings['chat-genesys-watson-identifier-engagementId']) ? $settings['chat-genesys-watson-identifier-engagementId'] : '';
-			$tenantId = isset($settings['chat-genesys-watson-identifier-tenantId']) ? $settings['chat-genesys-watson-identifier-tenantId'] : '';
-			$assistantId = isset($settings['chat-genesys-watson-identifier-assistantId']) ? $settings['chat-genesys-watson-identifier-assistantId'] : '';
-
-			if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
-				wp_enqueue_script(
-					'genesys-watson',
-					sprintf(
-						'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
-						$hostname,
-						$tenantId,
-						$assistantId,
-						$engagementId
-					),
-					apply_filters( 'genesys_watson_scripts_dependencies', array('jquery') ),
-					PLUGIN_VERSION,
-					false
-				);
-			}
+			$this->chatGenesysWatson( $settings );
 		}
 		else if ($chat === 'telia-ace') {
 			$service_string = isset($settings['chat-telia-ace-service']) ? $settings['chat-telia-ace-service'] : '';
@@ -272,6 +253,30 @@ class Assets {
 				'all'
 			);
 
+		}
+	}
+
+	protected function chatGenesysWatson( array $settings ): void
+	{
+		$hostname = isset($settings['chat-genesys-watson-identifier-hostname']) ? $settings['chat-genesys-watson-identifier-hostname'] : '';
+		$engagementId = isset($settings['chat-genesys-watson-identifier-engagementId']) ? $settings['chat-genesys-watson-identifier-engagementId'] : '';
+		$tenantId = isset($settings['chat-genesys-watson-identifier-tenantId']) ? $settings['chat-genesys-watson-identifier-tenantId'] : '';
+		$assistantId = isset($settings['chat-genesys-watson-identifier-assistantId']) ? $settings['chat-genesys-watson-identifier-assistantId'] : '';
+
+		if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
+			wp_enqueue_script(
+				'genesys-watson',
+				sprintf(
+					'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
+					$hostname,
+					$tenantId,
+					$assistantId,
+					$engagementId
+				),
+				apply_filters( 'genesys_watson_scripts_dependencies', array('jquery') ),
+				PLUGIN_VERSION,
+				false
+			);
 		}
 	}
 
