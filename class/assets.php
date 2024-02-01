@@ -277,24 +277,26 @@ class Assets {
 			$localization = '';
 		}
 
-		if ( ! empty($localization) ) {
-			wp_enqueue_script(
-				'telia-ace',
-				sprintf(
-					'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
-					$settings['chat-telia-ace-service']
-				),
-				apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
-				PLUGIN_VERSION,
-				array(
-					'in_footer'  => false,
-				)
-			);
-
-			add_action('wp_footer', function() use ($chat_name, $localization) {
-				$this->telia_ace_chat_button($chat_name, $localization);
-			});
+		if ( ! $localization ) {
+			return;
 		}
+
+		wp_enqueue_script(
+			'telia-ace',
+			sprintf(
+				'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
+				$settings['chat-telia-ace-service']
+			),
+			apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
+			PLUGIN_VERSION,
+			array(
+				'in_footer'  => false,
+			)
+		);
+
+		add_action('wp_footer', function() use ($chat_name, $localization) {
+			$this->telia_ace_chat_button($chat_name, $localization);
+		});
 	}
 
 	protected function chatSettings(): array
