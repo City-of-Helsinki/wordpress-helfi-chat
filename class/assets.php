@@ -139,15 +139,18 @@ class Assets {
 		}
 
 		$chat = $settings['chat-selection'] ?? '';
+		switch ( $chat ) {
+			case 'genesys-v9':
+				$this->chatGenesysV9( $settings );
+				break;
 
-		if ($chat === 'genesys-v9') {
-			$this->chatGenesysV9( $settings );
-		}
-		else if ($chat === "genesys-watson") {
-			$this->chatGenesysWatson( $settings );
-		}
-		else if ($chat === 'telia-ace') {
-			$this->chatTeliaAce( $settings );
+			case 'genesys-watson':
+				$this->chatGenesysWatson( $settings );
+				break;
+
+			case 'telia-ace':
+				$this->chatTeliaAce( $settings );
+				break;
 		}
 	}
 
