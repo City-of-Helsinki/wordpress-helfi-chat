@@ -162,18 +162,11 @@ class Assets {
 		if ($chat === 'genesys-v9') {
 			$allowed = $this->allowedLanguages();
 			$localization = '';
-			$current_lang = '';
+			$current_lang = $this->currentLanguage();
 			$chat_name = '';
 			$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
 			$service_string = isset($settings['chat-genesys-v9-service']) ? $settings['chat-genesys-v9-service'] : '';
 			$dataURL = isset($settings['chat-genesys-v9-data-url']) ? $settings['chat-genesys-v9-data-url'] : '';
-
-			if (function_exists('pll_current_language')) {
-				$current_lang = pll_current_language();
-			}
-			else {
-				$current_lang = substr( get_bloginfo('language'), 0, 2 );
-			}
 
 			if (in_array($current_lang, $allowed)) {
 				$chat_name = isset($settings['chat-genesys-v9-name-' . $current_lang]) ? $settings['chat-genesys-v9-name-' . $current_lang] : '';
@@ -246,16 +239,9 @@ class Assets {
 		else if ($chat === 'telia-ace') {
 			$service_string = isset($settings['chat-telia-ace-service']) ? $settings['chat-telia-ace-service'] : '';
 			$localization = '';
-			$current_lang = '';
+			$current_lang = $this->currentLanguage();
 			$chat_name = '';
 			$allowed = $this->allowedLanguages();
-
-			if (function_exists('pll_current_language')) {
-				$current_lang = pll_current_language();
-			}
-			else {
-				$current_lang = substr( get_bloginfo('language'), 0, 2 );
-			}
 
 			if (in_array($current_lang, $allowed)) {
 				$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
@@ -302,6 +288,13 @@ class Assets {
 			$this->assetVersion( $this->assetPath('public', 'styles', $this->minified, 'css') ),
 			'all'
 		);
+	}
+
+	protected function currentLanguage(): string
+	{
+		return function_exists( 'pll_current_language' )
+			? pll_current_language()
+			: substr( get_bloginfo( 'language' ), 0, 2 );
 	}
 
 	protected function allowedLanguages(): array
