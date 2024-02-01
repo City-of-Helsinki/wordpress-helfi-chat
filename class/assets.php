@@ -216,8 +216,9 @@ class Assets {
 			$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js') ),
 			false
 		);
+
 		wp_localize_script('genesys-v9', 'genesys_settings', array(
-			'chat_name' => !empty($chat_name) ? $chat_name : __('Start chat', 'helsinki-chat'),
+			'chat_name' => $chat_name ?: __('Start chat', 'helsinki-chat'),
 			'chat_aria_label' => __('Start chat', 'helsinki-chat'),
 			'service_string' => $settings['chat-genesys-v9-service'],
 			'dataURL' => $settings['chat-genesys-v9-data-url'],
