@@ -1,6 +1,9 @@
 <?php
+
 namespace CityOfHelsinki\WordPress\Chat;
+
 use ArtCloud\Helsinki\Plugin\HDS\Svg;
+use WP_Query;
 
 class Assets {
 	public $minified;
@@ -84,33 +87,6 @@ class Assets {
 		));
 	}
 
-	public function get_pages() {
-		$pages = array();
-		$pages_query = new \WP_Query( array(
-			'post_type' => 'page',
-			'posts_per_page' => -1,
-			'orderby' => 'title',
-			'order' => 'ASC',
-			'post_status' => 'publish',
-			'suppress_filters' => false,
-			'lang' => '',
-		) );
-
-		if ( $pages_query->have_posts() ) {
-			while ( $pages_query->have_posts() ) {
-				$pages_query->the_post();
-				$pages[] = array(
-					'id' => get_the_ID(),
-					'title' => get_the_title(),
-				);
-			}
-		}
-
-		wp_reset_postdata();
-
-		return $pages;
-	}
-
 	public function adminStyles( string $hook ) {
 		wp_enqueue_style(
 			'chat-wp-admin-styles',
@@ -132,173 +108,32 @@ class Assets {
 	}
 
 	public function chatScripts() {
-		$settings = get_option('helsinki-chat-settings', array());
-		$chat = '';
-		if (isset($settings['chat-selection'])) {
-			$chat = $settings['chat-selection'];
-		}
+		$settings = $this->chatSettings();
 
-		$visibility = 'all';
-		if (isset($settings['chat-visibility'])) {
-			$visibility = $settings['chat-visibility'];
-		}
-
-		$selectedPages = array();
-		if (isset($settings['chat-pages'])) {
-			$selectedPages = explode(',', $settings['chat-pages']);
-		}
-
-		$current_page_id = '';
-		if (is_front_page()) {
-			$current_page_id = get_option('page_on_front');
-		} else {
-			$current_page_id = get_the_ID();
-		}
-
-		if ($visibility === 'selected' && !in_array($current_page_id, $selectedPages)) {
+		if ( ! $this->isChatVisible( $settings ) ) {
 			return;
 		}
 
-		if ($chat === 'genesys-v9') {
-			$allowed = array(
-				'fi',
-				'en',
-				'sv'
-			);
-			$localization = '';
-			$current_lang = '';
-			$chat_name = '';
-			$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
-			$service_string = isset($settings['chat-genesys-v9-service']) ? $settings['chat-genesys-v9-service'] : '';
-			$dataURL = isset($settings['chat-genesys-v9-data-url']) ? $settings['chat-genesys-v9-data-url'] : '';
+		$chat = $settings['chat-selection'] ?? '';
+		switch ( $chat ) {
+			case 'genesys-v9':
+				$this->chatGenesysV9( $settings );
+				break;
 
-			if (function_exists('pll_current_language')) {
-				$current_lang = pll_current_language();
-			}
-			else {
-				$current_lang = substr( get_bloginfo('language'), 0, 2 );
-			}
+			case 'genesys-watson':
+				$this->chatGenesysWatson( $settings );
+				break;
 
-			if (in_array($current_lang, $allowed)) {
-				$chat_name = isset($settings['chat-genesys-v9-name-' . $current_lang]) ? $settings['chat-genesys-v9-name-' . $current_lang] : '';
-				$localization = isset($settings['chat-genesys-v9-localization-' . $current_lang]) ? $settings['chat-genesys-v9-localization-' . $current_lang] : '';
-			}
-			else {
-				$chat_name = isset($settings['chat-genesys-v9-name-en']) ? $settings['chat-genesys-v9-name-en'] : '';
-				$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
-			}
-
-			if (!empty($service_string) && !empty($dataURL) && !empty($localization) && ($other_langs_enabled || in_array($current_lang, $allowed))) {
-				wp_enqueue_script(
-					'genesys-v9-base',
-					'https://apps.mypurecloud.ie/widgets/9.0/cxbus.min.js',
-					apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
-					PLUGIN_VERSION,
-					false
-				);	
-
-				wp_enqueue_script(
-					'genesys-v9',
-					$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js'),
-					apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
-					$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js') ),
-					false
-				);	
-				wp_localize_script('genesys-v9', 'genesys_settings', array(
-					'chat_name' => !empty($chat_name) ? $chat_name : __('Start chat', 'helsinki-chat'),
-					'chat_aria_label' => __('Start chat', 'helsinki-chat'),
-					'service_string' => $service_string,
-					'dataURL' => $dataURL,
-					'localization' => $localization,
-					'language_code' => in_array($current_lang, $allowed) ? $current_lang : 'en',
-					'chat_icon' => class_exists(Svg::class) ? Svg::icon('forms-data', 'speechbubble-text') : '',
-					'chat_arrow_icon' => class_exists(Svg::class) ? Svg::icon('arrows-operators', 'angle-up') : ''
-				) );
-
-				wp_enqueue_style(
-					'genesys-v9-style',
-					$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css'),
-					apply_filters( 'genesys_style_dependencies', array( 'wp-block-library' ) ),
-					$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css') ),
-					'all'
-				);
-		
-			}
+			case 'telia-ace':
+				$this->chatTeliaAce( $settings );
+				break;
 		}
-		else if ($chat === "genesys-watson") {
-			$hostname = isset($settings['chat-genesys-watson-identifier-hostname']) ? $settings['chat-genesys-watson-identifier-hostname'] : '';
-			$engagementId = isset($settings['chat-genesys-watson-identifier-engagementId']) ? $settings['chat-genesys-watson-identifier-engagementId'] : '';
-			$tenantId = isset($settings['chat-genesys-watson-identifier-tenantId']) ? $settings['chat-genesys-watson-identifier-tenantId'] : '';
-			$assistantId = isset($settings['chat-genesys-watson-identifier-assistantId']) ? $settings['chat-genesys-watson-identifier-assistantId'] : '';
-		
-			if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
-				wp_enqueue_script(
-					'genesys-watson',
-					sprintf(
-						'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
-						$hostname,
-						$tenantId,
-						$assistantId,
-						$engagementId
-					),
-					apply_filters( 'genesys_watson_scripts_dependencies', array('jquery') ),
-					PLUGIN_VERSION,
-					false
-				);
-			}
-		}
-		else if ($chat === 'telia-ace') {
-			$service_string = isset($settings['chat-telia-ace-service']) ? $settings['chat-telia-ace-service'] : '';
-			$localization = '';
-			$current_lang = '';
-			$chat_name = '';
-			$allowed = array(
-				'fi',
-				'en',
-				'sv'
-			);
-
-			if (function_exists('pll_current_language')) {
-				$current_lang = pll_current_language();
-			}
-			else {
-				$current_lang = substr( get_bloginfo('language'), 0, 2 );
-			}
-
-			if (in_array($current_lang, $allowed)) {
-				$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
-				$localization = isset($settings['chat-telia-ace-localization-' . $current_lang]) ? $settings['chat-telia-ace-localization-' . $current_lang] : '';
-			}
-
-			if (!empty($service_string) && !empty($localization)) {
-				wp_enqueue_script(
-					'telia-ace',
-					sprintf(
-						'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
-						$service_string
-					),
-					apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
-					$this->assetVersion( $this->assetPath('chat/telia-ace', 'chat-telia-ace', false, 'js') ),
-					array(
-						'in_footer'  => false,
-					)
-				);
-
-				add_action('wp_footer', function() use ($chat_name, $localization) {
-					$this->telia_ace_chat_button($chat_name, $localization);
-				});
-			}
-		}
-	}
-
-	public function telia_ace_chat_button($chat_name = '', $localization = '') {
-		include str_replace( '\\', DIRECTORY_SEPARATOR, path_to_file('partials\telia-ace\chat-button'));
 	}
 
 	public function filterScript($tag, $handle, $source) {
 		if ( 'genesys-v9-base' === $handle ) {
 			$tag = '<script type="text/javascript" src="' . $source . '" id="' . $handle . '" onload="javascript:CXBus.configure({pluginsPath:\'https://apps.mypurecloud.ie/widgets/9.0/plugins/\'}); CXBus.loadPlugin(\'widgets-core\');"></script>';
-		}		
+		}
 		return $tag;
 	}
 
@@ -312,6 +147,221 @@ class Assets {
 		);
 	}
 
+	protected function get_pages(): array
+	{
+		$query = new WP_Query( array(
+			'post_type' => 'page',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+			'post_status' => 'publish',
+			'suppress_filters' => false,
+			'lang' => '',
+		) );
+
+		return array_map(
+			function( $post ) {
+				return array(
+					'id' => $post->ID,
+					'title' => get_the_title( $post ),
+				);
+			},
+			$query->posts
+		);
+	}
+
+	protected function chatGenesysV9( array $settings ): void
+	{
+		if ( empty( $settings['chat-genesys-v9-service'] ) ) {
+			return;
+		}
+
+		if ( empty( $settings['chat-genesys-v9-data-url'] ) ) {
+			return;
+		}
+
+		$current_lang = $this->currentLanguage();
+
+		if ( $this->isLanguageAllowed( $current_lang ) ) {
+			$chat_name = $settings['chat-genesys-v9-name-' . $current_lang] ?? '';
+			$localization = $settings['chat-genesys-v9-localization-' . $current_lang] ?? '';
+		} else {
+			$chat_name = $settings['chat-genesys-v9-name-en'] ?? '';
+			$localization = $settings['chat-genesys-v9-localization-en'] ?? '';
+		}
+
+		if ( ! $localization ) {
+			return;
+		}
+
+		$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
+		$language_ok = $other_langs_enabled || $this->isLanguageAllowed( $current_lang );
+		if ( ! $language_ok ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'genesys-v9-base',
+			'https://apps.mypurecloud.ie/widgets/9.0/cxbus.min.js',
+			apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
+			PLUGIN_VERSION,
+			false
+		);
+
+		wp_enqueue_script(
+			'genesys-v9',
+			$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js'),
+			apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
+			$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js') ),
+			false
+		);
+
+		wp_localize_script('genesys-v9', 'genesys_settings', array(
+			'chat_name' => $chat_name ?: __('Start chat', 'helsinki-chat'),
+			'chat_aria_label' => __('Start chat', 'helsinki-chat'),
+			'service_string' => $settings['chat-genesys-v9-service'],
+			'dataURL' => $settings['chat-genesys-v9-data-url'],
+			'localization' => $localization,
+			'language_code' => $this->isLanguageAllowed( $current_lang ) ? $current_lang : 'en',
+			'chat_icon' => $this->createIcon( 'forms-data', 'speechbubble-text' ),
+			'chat_arrow_icon' => $this->createIcon( 'arrows-operators', 'angle-up' ),
+		) );
+
+		wp_enqueue_style(
+			'genesys-v9-style',
+			$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css'),
+			apply_filters( 'genesys_style_dependencies', array( 'wp-block-library' ) ),
+			$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css') ),
+			'all'
+		);
+	}
+
+	protected function createIcon( string $group, string $name ): string
+	{
+		return class_exists(Svg::class) ? Svg::icon( $group, $name ) : '';
+	}
+
+	protected function chatGenesysWatson( array $settings ): void
+	{
+		if ( empty( $settings['chat-genesys-watson-identifier-hostname'] ) ) {
+			return;
+		}
+
+		if ( empty( $settings['chat-genesys-watson-identifier-engagementId'] ) ) {
+			return;
+		}
+
+		if ( empty( $settings['chat-genesys-watson-identifier-tenantId'] ) ) {
+			return;
+		}
+
+		if ( empty( $settings['chat-genesys-watson-identifier-assistantId'] ) ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'genesys-watson',
+			sprintf(
+				'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
+				$settings['chat-genesys-watson-identifier-hostname'],
+				$settings['chat-genesys-watson-identifier-tenantId'],
+				$settings['chat-genesys-watson-identifier-assistantId'],
+				$settings['chat-genesys-watson-identifier-engagementId']
+			),
+			apply_filters( 'genesys_watson_scripts_dependencies', array( 'jquery' ) ),
+			PLUGIN_VERSION,
+			false
+		);
+	}
+
+	protected function chatTeliaAce( array $settings ): void
+	{
+		if ( empty( $settings['chat-telia-ace-service'] ) ) {
+			return;
+		}
+
+		$current_lang = $this->currentLanguage();
+
+		if ( $this->isLanguageAllowed( $current_lang ) ) {
+			$chat_name = $settings['chat-telia-ace-name-' . $current_lang] ?? '';
+			$localization = $settings['chat-telia-ace-localization-' . $current_lang] ?? '';
+		} else {
+			$chat_name = '';
+			$localization = '';
+		}
+
+		if ( ! $localization ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'telia-ace',
+			sprintf(
+				'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
+				$settings['chat-telia-ace-service']
+			),
+			apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
+			PLUGIN_VERSION,
+			array(
+				'in_footer'  => false,
+			)
+		);
+
+		add_action('wp_footer', function() use ($chat_name, $localization) {
+			printf(
+				'<a class="telia-ace-chat-button" href="%s">%s</a>',
+				esc_url( $localization ),
+				esc_html( $chat_name )
+			);
+		});
+	}
+
+	protected function chatSettings(): array
+	{
+		return get_option( 'helsinki-chat-settings', array() );
+	}
+
+	protected function isChatVisible( array $settings ): bool
+	{
+		$chat = $settings['chat-selection'] ?? '';
+		if ( ! $chat || 'disabled' === $chat ) {
+			return false;
+		}
+
+		$visibility = $settings['chat-visibility'] ?? 'all';
+
+		if ( 'selected' === $visibility ) {
+			$pages = ! empty( $settings['chat-pages'] )
+				? explode( ',', $settings['chat-pages'] )
+				: array();
+
+			return in_array( $this->currentPageId(), $pages );
+		}
+
+		return true;
+	}
+
+	protected function currentPageId(): int
+	{
+		return is_front_page() ? (int) get_option( 'page_on_front' ) : get_the_ID();
+	}
+
+	protected function isLanguageAllowed( string $lang ): bool
+	{
+		return in_array( $lang, $this->allowedLanguages() );
+	}
+
+	protected function currentLanguage(): string
+	{
+		return function_exists( 'pll_current_language' )
+			? pll_current_language()
+			: substr( get_bloginfo( 'language' ), 0, 2 );
+	}
+
+	protected function allowedLanguages(): array
+	{
+		return array( 'fi', 'en', 'sv' );
+	}
 }
 $assets = new Assets();
 $assets->init();
