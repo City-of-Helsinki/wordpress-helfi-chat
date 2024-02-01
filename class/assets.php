@@ -132,7 +132,8 @@ class Assets {
 	}
 
 	public function chatScripts() {
-		$settings = get_option('helsinki-chat-settings', array());
+		$settings = $this->chatSettings();
+
 		$chat = '';
 		if (isset($settings['chat-selection'])) {
 			$chat = $settings['chat-selection'];
@@ -269,6 +270,11 @@ class Assets {
 			$this->assetVersion( $this->assetPath('public', 'styles', $this->minified, 'css') ),
 			'all'
 		);
+	}
+
+	protected function chatSettings(): array
+	{
+		return get_option( 'helsinki-chat-settings', array() );
 	}
 
 	protected function isChatVisible( array $settings ): bool
