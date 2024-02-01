@@ -187,12 +187,11 @@ class Assets {
 		$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
 
 		if ( $this->isLanguageAllowed( $current_lang ) ) {
-			$chat_name = isset($settings['chat-genesys-v9-name-' . $current_lang]) ? $settings['chat-genesys-v9-name-' . $current_lang] : '';
-			$localization = isset($settings['chat-genesys-v9-localization-' . $current_lang]) ? $settings['chat-genesys-v9-localization-' . $current_lang] : '';
-		}
-		else {
-			$chat_name = isset($settings['chat-genesys-v9-name-en']) ? $settings['chat-genesys-v9-name-en'] : '';
-			$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
+			$chat_name = $settings['chat-genesys-v9-name-' . $current_lang] ?? '';
+			$localization = $settings['chat-genesys-v9-localization-' . $current_lang] ?? '';
+		} else {
+			$chat_name = $settings['chat-genesys-v9-name-en'] ?? '';
+			$localization = $settings['chat-genesys-v9-localization-en'] ?? '';
 		}
 
 		if (!empty($localization) && ($other_langs_enabled || $this->isLanguageAllowed($current_lang))) {
