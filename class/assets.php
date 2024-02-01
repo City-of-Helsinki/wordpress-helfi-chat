@@ -1,6 +1,9 @@
 <?php
+
 namespace CityOfHelsinki\WordPress\Chat;
+
 use ArtCloud\Helsinki\Plugin\HDS\Svg;
+use WP_Query;
 
 class Assets {
 	public $minified;
@@ -84,33 +87,6 @@ class Assets {
 		));
 	}
 
-	public function get_pages() {
-		$pages = array();
-		$pages_query = new \WP_Query( array(
-			'post_type' => 'page',
-			'posts_per_page' => -1,
-			'orderby' => 'title',
-			'order' => 'ASC',
-			'post_status' => 'publish',
-			'suppress_filters' => false,
-			'lang' => '',
-		) );
-
-		if ( $pages_query->have_posts() ) {
-			while ( $pages_query->have_posts() ) {
-				$pages_query->the_post();
-				$pages[] = array(
-					'id' => get_the_ID(),
-					'title' => get_the_title(),
-				);
-			}
-		}
-
-		wp_reset_postdata();
-
-		return $pages;
-	}
-
 	public function adminStyles( string $hook ) {
 		wp_enqueue_style(
 			'chat-wp-admin-styles',
@@ -168,6 +144,29 @@ class Assets {
 			apply_filters( 'chat_styles_dependencies', array( 'wp-block-library' ) ),
 			$this->assetVersion( $this->assetPath('public', 'styles', $this->minified, 'css') ),
 			'all'
+		);
+	}
+
+	protected function get_pages(): array
+	{
+		$query = new WP_Query( array(
+			'post_type' => 'page',
+			'posts_per_page' => -1,
+			'orderby' => 'title',
+			'order' => 'ASC',
+			'post_status' => 'publish',
+			'suppress_filters' => false,
+			'lang' => '',
+		) );
+
+		return array_map(
+			function( $post ) {
+				return array(
+					'id' => $post->ID,
+					'title' => get_the_title( $post ),
+				);
+			},
+			$query->posts
 		);
 	}
 
