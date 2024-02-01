@@ -234,26 +234,35 @@ class Assets {
 
 	protected function chatGenesysWatson( array $settings ): void
 	{
-		$hostname = $settings['chat-genesys-watson-identifier-hostname'] ?? '';
-		$engagementId = $settings['chat-genesys-watson-identifier-engagementId'] ?? '';
-		$tenantId = $settings['chat-genesys-watson-identifier-tenantId'] ?? '';
-		$assistantId = $settings['chat-genesys-watson-identifier-assistantId'] ?? '';
-
-		if (!empty($hostname) && !empty($engagementId) && !empty($tenantId) && !empty($assistantId)) {
-			wp_enqueue_script(
-				'genesys-watson',
-				sprintf(
-					'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
-					$hostname,
-					$tenantId,
-					$assistantId,
-					$engagementId
-				),
-				apply_filters( 'genesys_watson_scripts_dependencies', array('jquery') ),
-				PLUGIN_VERSION,
-				false
-			);
+		if ( empty( $settings['chat-genesys-watson-identifier-hostname'] ) ) {
+			return;
 		}
+
+		if ( empty( $settings['chat-genesys-watson-identifier-engagementId'] ) ) {
+			return;
+		}
+
+		if ( empty( $settings['chat-genesys-watson-identifier-tenantId'] ) ) {
+			return;
+		}
+
+		if ( empty( $settings['chat-genesys-watson-identifier-assistantId'] ) ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'genesys-watson',
+			sprintf(
+				'%s/get-widget-button?tenantId=%s&assistantId=%s&engagementId=%s',
+				$settings['chat-genesys-watson-identifier-hostname'],
+				$settings['chat-genesys-watson-identifier-tenantId'],
+				$settings['chat-genesys-watson-identifier-assistantId'],
+				$settings['chat-genesys-watson-identifier-engagementId']
+			),
+			apply_filters( 'genesys_watson_scripts_dependencies', array( 'jquery' ) ),
+			PLUGIN_VERSION,
+			false
+		);
 	}
 
 	protected function chatTeliaAce( array $settings ): void
