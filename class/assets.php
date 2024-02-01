@@ -267,13 +267,14 @@ class Assets {
 			return;
 		}
 
-		$localization = '';
 		$current_lang = $this->currentLanguage();
-		$chat_name = '';
 
-		if ($this->isLanguageAllowed($current_lang)) {
-			$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
-			$localization = isset($settings['chat-telia-ace-localization-' . $current_lang]) ? $settings['chat-telia-ace-localization-' . $current_lang] : '';
+		if ( $this->isLanguageAllowed( $current_lang ) ) {
+			$chat_name = $settings['chat-telia-ace-name-' . $current_lang] ?? '';
+			$localization = $settings['chat-telia-ace-localization-' . $current_lang] ?? '';
+		} else {
+			$chat_name = '';
+			$localization = '';
 		}
 
 		if ( ! empty($localization) ) {
