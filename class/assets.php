@@ -134,14 +134,11 @@ class Assets {
 	public function chatScripts() {
 		$settings = $this->chatSettings();
 
-		$chat = '';
-		if (isset($settings['chat-selection'])) {
-			$chat = $settings['chat-selection'];
-		}
-
 		if ( ! $this->isChatVisible( $settings ) ) {
 			return;
 		}
+
+		$chat = $settings['chat-selection'] ?? '';
 
 		if ($chat === 'genesys-v9') {
 			$localization = '';
