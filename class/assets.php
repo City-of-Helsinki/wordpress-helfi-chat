@@ -138,19 +138,7 @@ class Assets {
 			$chat = $settings['chat-selection'];
 		}
 
-		$visibility = 'all';
-		if (isset($settings['chat-visibility'])) {
-			$visibility = $settings['chat-visibility'];
-		}
-
-		$selectedPages = array();
-		if (isset($settings['chat-pages'])) {
-			$selectedPages = explode(',', $settings['chat-pages']);
-		}
-
-		$current_page_id = $this->currentPageId();
-
-		if ($visibility === 'selected' && !in_array($current_page_id, $selectedPages)) {
+		if ( ! $this->isChatVisible( $settings ) ) {
 			return;
 		}
 
@@ -281,6 +269,26 @@ class Assets {
 			$this->assetVersion( $this->assetPath('public', 'styles', $this->minified, 'css') ),
 			'all'
 		);
+	}
+
+	protected function isChatVisible( array $settings ): bool
+	{
+		$chat = $settings['chat-selection'] ?? '';
+		if ( ! $chat || 'disabled' === $chat ) {
+			return false;
+		}
+
+		$visibility = $settings['chat-visibility'] ?? 'all';
+
+		if ( 'selected' === $visibility ) {
+			$pages = ! empty( $settings['chat-pages'] )
+				? explode( ',', $settings['chat-pages'] )
+				: array();
+
+			return in_array( $this->currentPageId(), $pages );
+		}
+
+		return true;
 	}
 
 	protected function currentPageId(): int
