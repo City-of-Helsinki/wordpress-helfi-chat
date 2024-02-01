@@ -148,12 +148,7 @@ class Assets {
 			$selectedPages = explode(',', $settings['chat-pages']);
 		}
 
-		$current_page_id = '';
-		if (is_front_page()) {
-			$current_page_id = get_option('page_on_front');
-		} else {
-			$current_page_id = get_the_ID();
-		}
+		$current_page_id = $this->currentPageId();
 
 		if ($visibility === 'selected' && !in_array($current_page_id, $selectedPages)) {
 			return;
@@ -286,6 +281,11 @@ class Assets {
 			$this->assetVersion( $this->assetPath('public', 'styles', $this->minified, 'css') ),
 			'all'
 		);
+	}
+
+	protected function currentPageId(): int
+	{
+		return is_front_page() ? (int) get_option( 'page_on_front' ) : get_the_ID();
 	}
 
 	protected function isLanguageAllowed( string $lang ): bool
