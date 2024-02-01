@@ -181,10 +181,7 @@ class Assets {
 			return;
 		}
 
-		$localization = '';
 		$current_lang = $this->currentLanguage();
-		$chat_name = '';
-		$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
 
 		if ( $this->isLanguageAllowed( $current_lang ) ) {
 			$chat_name = $settings['chat-genesys-v9-name-' . $current_lang] ?? '';
@@ -194,42 +191,49 @@ class Assets {
 			$localization = $settings['chat-genesys-v9-localization-en'] ?? '';
 		}
 
-		if (!empty($localization) && ($other_langs_enabled || $this->isLanguageAllowed($current_lang))) {
-			wp_enqueue_script(
-				'genesys-v9-base',
-				'https://apps.mypurecloud.ie/widgets/9.0/cxbus.min.js',
-				apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
-				PLUGIN_VERSION,
-				false
-			);
-
-			wp_enqueue_script(
-				'genesys-v9',
-				$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js'),
-				apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
-				$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js') ),
-				false
-			);
-			wp_localize_script('genesys-v9', 'genesys_settings', array(
-				'chat_name' => !empty($chat_name) ? $chat_name : __('Start chat', 'helsinki-chat'),
-				'chat_aria_label' => __('Start chat', 'helsinki-chat'),
-				'service_string' => $settings['chat-genesys-v9-service'],
-				'dataURL' => $settings['chat-genesys-v9-data-url'],
-				'localization' => $localization,
-				'language_code' => $this->isLanguageAllowed( $current_lang ) ? $current_lang : 'en',
-				'chat_icon' => class_exists(Svg::class) ? Svg::icon('forms-data', 'speechbubble-text') : '',
-				'chat_arrow_icon' => class_exists(Svg::class) ? Svg::icon('arrows-operators', 'angle-up') : ''
-			) );
-
-			wp_enqueue_style(
-				'genesys-v9-style',
-				$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css'),
-				apply_filters( 'genesys_style_dependencies', array( 'wp-block-library' ) ),
-				$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css') ),
-				'all'
-			);
-
+		if ( ! $localization ) {
+			return;
 		}
+
+		$other_langs_enabled = isset($settings['chat-genesys-v9-enable-other-languages']) && $settings['chat-genesys-v9-enable-other-languages'] === 'on' ? true : false;
+		$language_ok = $other_langs_enabled || $this->isLanguageAllowed( $current_lang );
+		if ( ! $language_ok ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'genesys-v9-base',
+			'https://apps.mypurecloud.ie/widgets/9.0/cxbus.min.js',
+			apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
+			PLUGIN_VERSION,
+			false
+		);
+
+		wp_enqueue_script(
+			'genesys-v9',
+			$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js'),
+			apply_filters( 'genesys_v9_scripts_dependencies', array('jquery') ),
+			$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'js') ),
+			false
+		);
+		wp_localize_script('genesys-v9', 'genesys_settings', array(
+			'chat_name' => !empty($chat_name) ? $chat_name : __('Start chat', 'helsinki-chat'),
+			'chat_aria_label' => __('Start chat', 'helsinki-chat'),
+			'service_string' => $settings['chat-genesys-v9-service'],
+			'dataURL' => $settings['chat-genesys-v9-data-url'],
+			'localization' => $localization,
+			'language_code' => $this->isLanguageAllowed( $current_lang ) ? $current_lang : 'en',
+			'chat_icon' => class_exists(Svg::class) ? Svg::icon('forms-data', 'speechbubble-text') : '',
+			'chat_arrow_icon' => class_exists(Svg::class) ? Svg::icon('arrows-operators', 'angle-up') : ''
+		) );
+
+		wp_enqueue_style(
+			'genesys-v9-style',
+			$this->assetUrl('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css'),
+			apply_filters( 'genesys_style_dependencies', array( 'wp-block-library' ) ),
+			$this->assetVersion( $this->assetPath('chat/genesys-v9', 'chat-genesys-gui-customization', false, 'css') ),
+			'all'
+		);
 	}
 
 	protected function chatGenesysWatson( array $settings ): void
