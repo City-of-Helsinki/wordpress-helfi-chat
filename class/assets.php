@@ -258,7 +258,10 @@ class Assets {
 
 	protected function chatTeliaAce( array $settings ): void
 	{
-		$service_string = isset($settings['chat-telia-ace-service']) ? $settings['chat-telia-ace-service'] : '';
+		if ( empty( $settings['chat-telia-ace-service'] ) ) {
+			return;
+		}
+
 		$localization = '';
 		$current_lang = $this->currentLanguage();
 		$chat_name = '';
@@ -269,12 +272,12 @@ class Assets {
 			$localization = isset($settings['chat-telia-ace-localization-' . $current_lang]) ? $settings['chat-telia-ace-localization-' . $current_lang] : '';
 		}
 
-		if (!empty($service_string) && !empty($localization)) {
+		if ( ! empty($localization) ) {
 			wp_enqueue_script(
 				'telia-ace',
 				sprintf(
 					'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
-					$service_string
+					$settings['chat-telia-ace-service']
 				),
 				apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
 				PLUGIN_VERSION,
