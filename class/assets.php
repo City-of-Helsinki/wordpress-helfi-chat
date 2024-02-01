@@ -168,7 +168,7 @@ class Assets {
 			$service_string = isset($settings['chat-genesys-v9-service']) ? $settings['chat-genesys-v9-service'] : '';
 			$dataURL = isset($settings['chat-genesys-v9-data-url']) ? $settings['chat-genesys-v9-data-url'] : '';
 
-			if (in_array($current_lang, $allowed)) {
+			if ( $this->isLanguageAllowed( $current_lang ) ) {
 				$chat_name = isset($settings['chat-genesys-v9-name-' . $current_lang]) ? $settings['chat-genesys-v9-name-' . $current_lang] : '';
 				$localization = isset($settings['chat-genesys-v9-localization-' . $current_lang]) ? $settings['chat-genesys-v9-localization-' . $current_lang] : '';
 			}
@@ -177,7 +177,7 @@ class Assets {
 				$localization = isset($settings['chat-genesys-v9-localization-en']) ? $settings['chat-genesys-v9-localization-en'] : '';
 			}
 
-			if (!empty($service_string) && !empty($dataURL) && !empty($localization) && ($other_langs_enabled || in_array($current_lang, $allowed))) {
+			if (!empty($service_string) && !empty($dataURL) && !empty($localization) && ($other_langs_enabled || $this->isLanguageAllowed( $current_lang ))) {
 				wp_enqueue_script(
 					'genesys-v9-base',
 					'https://apps.mypurecloud.ie/widgets/9.0/cxbus.min.js',
@@ -199,7 +199,7 @@ class Assets {
 					'service_string' => $service_string,
 					'dataURL' => $dataURL,
 					'localization' => $localization,
-					'language_code' => in_array($current_lang, $allowed) ? $current_lang : 'en',
+					'language_code' => $this->isLanguageAllowed( $current_lang ) ? $current_lang : 'en',
 					'chat_icon' => class_exists(Svg::class) ? Svg::icon('forms-data', 'speechbubble-text') : '',
 					'chat_arrow_icon' => class_exists(Svg::class) ? Svg::icon('arrows-operators', 'angle-up') : ''
 				) );
@@ -243,7 +243,7 @@ class Assets {
 			$chat_name = '';
 			$allowed = $this->allowedLanguages();
 
-			if (in_array($current_lang, $allowed)) {
+			if ( $this->isLanguageAllowed( $current_lang ) ) {
 				$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
 				$localization = isset($settings['chat-telia-ace-localization-' . $current_lang]) ? $settings['chat-telia-ace-localization-' . $current_lang] : '';
 			}
@@ -288,6 +288,11 @@ class Assets {
 			$this->assetVersion( $this->assetPath('public', 'styles', $this->minified, 'css') ),
 			'all'
 		);
+	}
+
+	protected function isLanguageAllowed( string $lang ): bool
+	{
+		return in_array( $lang, $this->allowedLanguages() );
 	}
 
 	protected function currentLanguage(): string
