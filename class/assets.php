@@ -147,34 +147,7 @@ class Assets {
 			$this->chatGenesysWatson( $settings );
 		}
 		else if ($chat === 'telia-ace') {
-			$service_string = isset($settings['chat-telia-ace-service']) ? $settings['chat-telia-ace-service'] : '';
-			$localization = '';
-			$current_lang = $this->currentLanguage();
-			$chat_name = '';
-
-			if ( $this->isLanguageAllowed( $current_lang ) ) {
-				$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
-				$localization = isset($settings['chat-telia-ace-localization-' . $current_lang]) ? $settings['chat-telia-ace-localization-' . $current_lang] : '';
-			}
-
-			if (!empty($service_string) && !empty($localization)) {
-				wp_enqueue_script(
-					'telia-ace',
-					sprintf(
-						'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
-						$service_string
-					),
-					apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
-					$this->assetVersion( $this->assetPath('chat/telia-ace', 'chat-telia-ace', false, 'js') ),
-					array(
-						'in_footer'  => false,
-					)
-				);
-
-				add_action('wp_footer', function() use ($chat_name, $localization) {
-					$this->telia_ace_chat_button($chat_name, $localization);
-				});
-			}
+			$this->chatTeliaAce( $settings );
 		}
 	}
 
@@ -277,6 +250,39 @@ class Assets {
 				PLUGIN_VERSION,
 				false
 			);
+		}
+	}
+
+	protected function chatTeliaAce( array $settings ): void
+	{
+		$service_string = isset($settings['chat-telia-ace-service']) ? $settings['chat-telia-ace-service'] : '';
+		$localization = '';
+		$current_lang = $this->currentLanguage();
+		$chat_name = '';
+		$allowed = $this->allowedLanguages();
+
+		if ($this->isLanguageAllowed($current_lang)) {
+			$chat_name = isset($settings['chat-telia-ace-name-' . $current_lang]) ? $settings['chat-telia-ace-name-' . $current_lang] : '';
+			$localization = isset($settings['chat-telia-ace-localization-' . $current_lang]) ? $settings['chat-telia-ace-localization-' . $current_lang] : '';
+		}
+
+		if (!empty($service_string) && !empty($localization)) {
+			wp_enqueue_script(
+				'telia-ace',
+				sprintf(
+					'https://wds.ace.teliacompany.com/wds/instances/%s/ACEWebSDK.min.js',
+					$service_string
+				),
+				apply_filters( 'telia_ace_scripts_dependencies', array('jquery') ),
+				PLUGIN_VERSION,
+				array(
+					'in_footer'  => false,
+				)
+			);
+
+			add_action('wp_footer', function() use ($chat_name, $localization) {
+				$this->telia_ace_chat_button($chat_name, $localization);
+			});
 		}
 	}
 
