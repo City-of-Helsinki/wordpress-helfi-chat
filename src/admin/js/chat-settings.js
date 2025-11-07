@@ -58,41 +58,43 @@ wp.domReady( () => {
             }
         }
 
-        const control = <PageSelectFormTokenField id={ id } selectedOptionsNames={ selectedOptionsNames } optionsValues={ optionsValues } optionsNames={ optionsNames } />;
         var root = wp.element.createRoot( document.getElementById( id + '-controller') );
 
-        root.render( control );
+        root.render( wp.element.createElement(PageSelectFormTokenField, {
+          id,
+          selectedOptionsNames,
+          optionsValues,
+          optionsNames
+        }) );
     }
 
     const PageSelectFormTokenField = ( { id, selectedOptionsNames, optionsValues, optionsNames } ) => {
         const [ value, setValue ] = useState( selectedOptionsNames );
 
-        return (
-            <FormTokenField
-                label={ __('Add a new page' , 'helsinki-chat') }
-                id={ id + '-control' }
-                suggestions={ optionsNames }
-                maxSuggestions={ 10 }
-                value={ value }
-                __experimentalShowHowTo={ false }
-                __nextHasNoMarginBottom={ true }
-                onChange={ ( values ) => {
-                    var updatedSelectedOptions = [];
-                    var updatedSelectedOptionsNames = [];
-                    values.map( ( name ) => {
-                        //find the id of the selected option
-                        const index = optionsNames.indexOf( name );
-                        if ( index !== -1 ) {
-                            updatedSelectedOptions.push( optionsValues[index] );
-                            updatedSelectedOptionsNames.push( name );
-                        }
-                    });
-                    //update component value
-                    updateChatPagesValue( updatedSelectedOptions );
-                    setValue( updatedSelectedOptionsNames );
-                } }
-            />
-        );
+        return wp.element.createElement(FormTokenField, {
+          label: __('Add a new page' , 'helsinki-chat'),
+          id: id + '-control',
+          suggestions: optionsNames,
+          maxSuggestions: 10,
+          value,
+          __experimentalShowHowTo: false,
+          __nextHasNoMarginBottom: true,
+          onChange: ( values ) => {
+              var updatedSelectedOptions = [];
+              var updatedSelectedOptionsNames = [];
+              values.map( ( name ) => {
+                  //find the id of the selected option
+                  const index = optionsNames.indexOf( name );
+                  if ( index !== -1 ) {
+                      updatedSelectedOptions.push( optionsValues[index] );
+                      updatedSelectedOptionsNames.push( name );
+                  }
+              });
+              //update component value
+              updateChatPagesValue( updatedSelectedOptions );
+              setValue( updatedSelectedOptionsNames );
+          },
+        });
     };
 
     function getChatPagesValueArray() {
