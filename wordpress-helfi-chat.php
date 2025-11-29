@@ -3,10 +3,10 @@
 /**
   * Plugin Name: Helsinki Chat
   * Description: Adds chat integrations for various chat services.
-  * Version: 1.11.0
+  * Version: 2.0.0
   * License: GPLv3
-  * Requires at least: 5.7
-  * Requires PHP:      7.1
+  * Requires at least: 6.7
+  * Requires PHP:      8.2
   * Author: Broomu Digitals
   * Author URI: https://www.broomudigitals.fi
   * Text Domain: helsinki-chat
@@ -15,18 +15,31 @@
 
 namespace CityOfHelsinki\WordPress\Chat;
 
-/**
- * Constants
-*/
-define( __NAMESPACE__ . '\\PLUGIN_VERSION', '1.11.0' );
-define( __NAMESPACE__ . '\\PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-define( __NAMESPACE__ . '\\PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( __NAMESPACE__ . '\\PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-
-
 if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
+
+function define_constants( string $file ) : void {
+	if ( ! function_exists('get_plugin_data') ) {
+		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	}
+
+	$pluginData = \get_plugin_data( $file, false, false );
+	$dirname = dirname( $file );
+	$basename = basename( $file );
+	$dirbasename = basename( $dirname );
+
+	define( __NAMESPACE__ . '\\PLUGIN_VERSION', $pluginData[ 'Version' ] );
+	define( __NAMESPACE__ . '\\PLUGIN_MAIN_FILE', $file );
+	define( __NAMESPACE__ . '\\PLUGIN_PATH', $dirname . DIRECTORY_SEPARATOR );
+	define( __NAMESPACE__ . '\\PLUGIN_DIRNAME', $dirbasename );
+	define( __NAMESPACE__ . '\\PLUGIN_BASENAME', $basename );
+	define( __NAMESPACE__ . '\\PLUGIN_SLUG', str_replace( '-', '_', PLUGIN_DIRNAME ) );
+	define( __NAMESPACE__ . '\\PLUGIN_NAME', $dirbasename . DIRECTORY_SEPARATOR . $basename );
+	define( __NAMESPACE__ . '\\PLUGIN_URL', \plugin_dir_url( $file ) );
+}
+
+define_constants( __FILE__ );
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\init', 100 );
 function init() {
@@ -37,6 +50,7 @@ function init() {
 	  */
 	require_once 'functions.php';
 	require_once 'settings/settings.php';
+	require_once 'integrations/wp-helfi-cookie-consent.php';
 
 	/**
 	 * Assets
