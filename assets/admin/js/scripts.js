@@ -10,16 +10,24 @@ wp.domReady(function () {
   var _wp$components = wp.components,
     FormTokenField = _wp$components.FormTokenField,
     CustomSelectControl = _wp$components.CustomSelectControl;
-  var useState = wp.element.useState;
+  var _wp$element = wp.element,
+    createRoot = _wp$element.createRoot,
+    createElement = _wp$element.createElement,
+    useState = _wp$element.useState;
   var __ = wp.i18n.__;
-  function initChatSettingsPage() {
+  function initChatSettingsPage(_ref) {
+    var pages = _ref.pages;
     var page = new URLSearchParams(window.location.search).get('page');
     if (page === 'helsinki-chat-settings') {
       var chatSelection = document.getElementById('chat-selection');
       chatSelection.onchange = function () {
         displayChatSettingsSection(this);
       };
-      addPageSelectFormTokenFieldControl('chat-pages', getChatPagesValueArray());
+      addPageSelectFormTokenFieldControl({
+        id: 'chat-pages',
+        pages: pages || [],
+        selected: getChatPagesValueArray()
+      });
       initChatVisibilitySelector();
       displayChatSettingsSection(chatSelection);
     }
@@ -38,46 +46,45 @@ wp.domReady(function () {
       chatSettingsSections[i].style.display = 'none';
     }
   }
-  function addPageSelectFormTokenFieldControl(id, selectedOptions) {
+  function addPageSelectFormTokenFieldControl(_ref2) {
+    var id = _ref2.id,
+      pages = _ref2.pages,
+      selected = _ref2.selected;
     var options = [];
-    for (var i = 0; i < window.helsinkiChatSettings.pages.length; i++) {
-      options.push({
-        label: window.helsinkiChatSettings.pages[i].title,
-        value: window.helsinkiChatSettings.pages[i].id
-      });
-    }
     var optionsNames = [];
     var optionsValues = [];
-    for (var _i = 0; _i < window.helsinkiChatSettings.pages.length; _i++) {
-      optionsNames.push(window.helsinkiChatSettings.pages[_i].title);
-      optionsValues.push(window.helsinkiChatSettings.pages[_i].id);
-    }
-    //create an array with selectedOptions titles that match the optionsNames
     var selectedOptionsNames = [];
-    for (var _i2 = 0; _i2 < selectedOptions.length; _i2++) {
-      var index = optionsValues.indexOf(parseInt(selectedOptions[_i2]));
-      if (index !== -1) {
-        selectedOptionsNames.push(optionsNames[index]);
+    pages.forEach(function (_ref3) {
+      var id = _ref3.id,
+        title = _ref3.title;
+      options.push({
+        label: title,
+        value: id
+      });
+      optionsNames.push(title);
+      optionsValues.push(id);
+      if (selected.includes(id)) {
+        selectedOptionsNames.push(title);
       }
-    }
-    var root = wp.element.createRoot(document.getElementById(id + '-controller'));
-    root.render(wp.element.createElement(PageSelectFormTokenField, {
+    });
+    var root = createRoot(document.getElementById(id + '-controller'));
+    root.render(createElement(PageSelectFormTokenField, {
       id: id,
       selectedOptionsNames: selectedOptionsNames,
       optionsValues: optionsValues,
       optionsNames: optionsNames
     }));
   }
-  var PageSelectFormTokenField = function PageSelectFormTokenField(_ref) {
-    var id = _ref.id,
-      selectedOptionsNames = _ref.selectedOptionsNames,
-      optionsValues = _ref.optionsValues,
-      optionsNames = _ref.optionsNames;
+  var PageSelectFormTokenField = function PageSelectFormTokenField(_ref4) {
+    var id = _ref4.id,
+      selectedOptionsNames = _ref4.selectedOptionsNames,
+      optionsValues = _ref4.optionsValues,
+      optionsNames = _ref4.optionsNames;
     var _useState = useState(selectedOptionsNames),
       _useState2 = _slicedToArray(_useState, 2),
       value = _useState2[0],
       setValue = _useState2[1];
-    return wp.element.createElement(FormTokenField, {
+    return createElement(FormTokenField, {
       label: __('Add a new page', 'helsinki-chat'),
       id: id + '-control',
       suggestions: optionsNames,
@@ -104,7 +111,11 @@ wp.domReady(function () {
   };
   function getChatPagesValueArray() {
     var chatPages = document.getElementById('chat-pages');
-    return chatPages.value.split(',');
+    return chatPages.value.split(',').filter(function (value) {
+      return '' !== value;
+    }).map(function (id) {
+      return parseInt(id, 10);
+    });
   }
   function updateChatPagesValue(value) {
     var chatPages = document.getElementById('chat-pages');
@@ -128,11 +139,5 @@ wp.domReady(function () {
     // trigger the change event to set the initial visibility
     chatVisibility.dispatchEvent(new Event('change'));
   }
-
-  /*function onChatPageChange( value ) {
-      const chatPage = document.getElementById( 'chat-page' );
-      chatPage.value = value;
-  }*/
-
-  initChatSettingsPage();
+  initChatSettingsPage(helsinkiChatSettings);
 });
