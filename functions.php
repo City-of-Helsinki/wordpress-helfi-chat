@@ -1,59 +1,104 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace CityOfHelsinki\WordPress\Chat;
 
-function debug_enabled() {
-	return defined( 'WP_DEBUG' ) && WP_DEBUG;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-function plugin_path() {
-	return untrailingslashit( PLUGIN_PATH ) . DIRECTORY_SEPARATOR;
-}
-
-/*function views_path( string $dir = '' ) {
-	$path = plugin_path() . 'views' . DIRECTORY_SEPARATOR;
-	if ( $dir ) {
-		$path .= $dir . DIRECTORY_SEPARATOR;
-	}
-	return $path;
-}
-
-function metabox_view( string $name, $data = null ) {
-	require_once views_path( 'metabox' ) . $name . '.php';
-}
-
-function config_path() {
-	return plugin_path() . 'config' . DIRECTORY_SEPARATOR;
-}*/
-
-function plugin_url() {
-	return untrailingslashit( PLUGIN_URL ) . '/';
-}
-
-function path_to_file( string $name ) {
-	return plugin_path() . trim( $name ) . '.php';
-}
-
-function autoloader( $class ) {
+/**
+  * Autoloading
+  */
+function class_loader( $class ): void {
 	if ( false === stripos( $class, __NAMESPACE__ ) ) {
 		return;
 	}
 
-	$class = str_replace( __NAMESPACE__, '', $class );
-	$file = str_replace( '\\', DIRECTORY_SEPARATOR, path_to_file( 'class' . $class ) );
+	$parts = array_filter(
+		explode(
+			DIRECTORY_SEPARATOR,
+			str_replace(
+				array( __NAMESPACE__, '\\' ),
+				array( '', DIRECTORY_SEPARATOR ),
+				$class
+			)
+		)
+	);
+
+	$class = str_replace( '_', '-', strtolower( array_pop( $parts ) ) );
+
+	$file = path_to_php_file( array_merge(
+		array_map( 'strtolower', $parts ),
+		array( 'class-' . $class )
+	) );
+
 	if ( file_exists( $file ) ) {
 		require_once $file;
 	}
 }
 
-function textdomain() {
-	load_plugin_textdomain(
-		'helsinki-chat',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
+/**
+  * Execution
+  */
+function load_includes() : void {
+	load_php_files( 'includes', load_config('includes') );
 }
 
-function chat_random_string() {
+function load_features() : void {
+	load_php_files( 'features', load_config('features') );
+}
+
+function load_integrations() : void {
+	load_php_files( 'integrations', load_config('integrations') );
+}
+
+/**
+  * Files
+  */
+function path_to_file( string $name ) : string {
+	return plugin_path() . trim( $name );
+}
+
+function path_to_php_file( $name ) : string {
+	return is_array( $name )
+		? path_to_file( implode( DIRECTORY_SEPARATOR, $name ) . '.php' )
+		: path_to_file( $name . '.php' );
+}
+
+function load_php_files( string $path, array $files ) : void {
+	foreach ( $files as $dir => $file ) {
+		$parts = array( $path );
+
+		if ( is_string( $dir ) && $dir ) {
+			$parts[] = $dir;
+		}
+
+		if ( is_array( $file ) ) {
+			load_php_files( implode( DIRECTORY_SEPARATOR , $parts ), $file );
+		} else {
+			$parts[] = $file;
+			require_once path_to_php_file( implode( DIRECTORY_SEPARATOR , $parts ) );
+		}
+	}
+}
+
+function load_config( string $name ) : array {
+	$file = path_to_php_file( array( 'config', $name ));
+
+	if ( ! file_exists( $file ) ) {
+		return array();
+	}
+
+	$config = include $file;
+
+	return $config;
+}
+
+/**
+  * Misc
+  */
+function chat_random_string(): string {
 	return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10);
 }
