@@ -1,40 +1,143 @@
 <?php
 
-namespace CityOfHelsinki\WordPress\Chat;
+namespace CityOfHelsinki\WordPress\Chat\Features\Settings;
 
-define(__NAMESPACE__ . '\\PAGE_SLUG', 'helsinki-chat-settings');
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-add_action( 'admin_init', __NAMESPACE__ . '\\chat_register_settings');
-add_action( 'admin_menu', __NAMESPACE__ . '\\chat_settings_page' );
-add_action( 'helsinki_chat_settings_tab_panel', __NAMESPACE__ . '\\chat_renderTabPanel' );
-add_action( 'helsinki_chat_init', __NAMESPACE__ . '\\chat_settings_defaults');
-//add_action( 'helsinki_chat_init', __NAMESPACE__ . '\\chat_register_polylang_strings');
+\add_action( 'helsinki_chat_loaded', __NAMESPACE__ . '\\loaded' );
+function loaded(): void {
+	\add_action( 'admin_init', __NAMESPACE__ . '\\chat_register_settings');
+	\add_action( 'admin_menu', __NAMESPACE__ . '\\chat_settings_page' );
+	\add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_assets' );
 
-$tabs = array();
+	\add_action( 'helsinki_chat_settings_tab_panel', __NAMESPACE__ . '\\chat_renderTabPanel' );
+	\add_action( 'helsinki_chat_init', __NAMESPACE__ . '\\chat_settings_defaults');
+	//add_action( 'helsinki_chat_init', __NAMESPACE__ . '\\chat_register_polylang_strings');
+
+	\add_filter( 'helsinki_chat_settings', __NAMESPACE__ . '\\chat_settings' );
+}
+
+function chat_settings_page_slug(): string {
+	return 'helsinki-chat-settings';
+}
+
+function chat_settings(): array {
+	return \get_option( chat_settings_page_slug(), array() );
+}
+
+function update_chat_settings( array $settings ): bool {
+	return \add_option( chat_settings_page_slug(), $settings );
+}
+
+function enqueue_assets( $hook ): void {
+	if ( $hook !== 'toplevel_page_' . chat_settings_page_slug() ) {
+		return;
+	}
+
+	$path = \apply_filters( 'helsinki_chat_plugin_path', '' );
+	$url = \apply_filters( 'helsinki_chat_assets_url', '' );
+	$version = \apply_filters( 'helsinki_chat_asset_version', '' );
+	$is_debug = \apply_filters( 'helsinki_chat_is_debug', false );
+
+	\wp_enqueue_script(
+		'chat-wp-admin-scripts',
+		$url . '/admin/js/scripts' . ( $is_debug ? '.min.js' : '.js' ),
+		\apply_filters(
+			'chat_admin_scripts_dependencies',
+			array( 'wp-dom-ready' )
+		),
+		$version,
+		array(
+			'strategy' => 'defer',
+			'in_footer' => true,
+		)
+	);
+
+	\wp_set_script_translations(
+		'chat-wp-admin-scripts',
+		'helsinki-chat',
+		$path . 'languages'
+	);
+
+	\wp_add_inline_script(
+		'chat-wp-admin-scripts',
+		sprintf(
+			'const helsinkiChatSettings = %s;',
+			json_encode( array( 'pages' => chat_available_pages() ) )
+		),
+		'before'
+	);
+
+	\wp_enqueue_style(
+		'chat-wp-admin-styles',
+		$url . '/admin/css/styles' . ( $is_debug ? '.min.css' : '.css' ),
+		\apply_filters(
+			'chat_admin_styles_dependencies',
+			array( 'wp-components' )
+		),
+		$version,
+		'all'
+	);
+}
+
+function chat_available_pages(): array {
+	$query = new \WP_Query( array(
+		'post_type' => 'page',
+		'posts_per_page' => -1,
+		'orderby' => 'title',
+		'order' => 'ASC',
+		'post_status' => 'publish',
+		'suppress_filters' => false,
+		'no_found_rows' => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'lang' => '',
+	) );
+
+	return array_map(
+		fn( \WP_Post $post ) => array(
+			'id' => $post->ID,
+			'title' => \get_the_title( $post ),
+		),
+		$query->posts
+	);
+}
 
 function chat_settings_page() {
-    add_menu_page(
+    \add_menu_page(
         __('Chat', 'helsinki-chat'),
         __('Chat', 'helsinki-chat'),
-        apply_filters(
+        \apply_filters(
             'helsinki_chat_settings_page_capability_requirement',
             'manage_options'
         ),
-        PAGE_SLUG,
+        chat_settings_page_slug(),
         __NAMESPACE__ . '\\chat_settings_renderpage',
         'dashicons-format-chat',
         null
     );
 }
 
-function chat_settings_renderpage() {
-    $tabs = include PLUGIN_PATH . 'config/settings/tabs.php';
+function chat_tabs_config(): array {
+	return \apply_filters( 'helsinki_chat_load_config', 'settings/tabs' );
+}
 
-    include_once PLUGIN_PATH . 'views/settings/page.php';
+function chat_options_config(): array {
+	return \apply_filters( 'helsinki_chat_load_config', 'settings/options' );
+}
+
+function chat_settings_renderpage() {
+    $tabs = chat_tabs_config();
+
+	require_once \apply_filters( 'helsinki_chat_path_to_php_file', array(
+		'features', 'settings', 'templates', 'page'
+	) );
 }
 
 function chat_renderTabPanel( string $tab ) {
-    $tabs = include PLUGIN_PATH . 'config/settings/tabs.php';
+    $tabs = chat_tabs_config();
     if ( ! isset( $tabs[$tab] ) ) {
         return;
     }
@@ -44,12 +147,14 @@ function chat_renderTabPanel( string $tab ) {
     $section = $settingsConfig['section'];
     unset( $settingsConfig );
 
-    include_once PLUGIN_PATH . 'views/settings/form.php';
+	require_once \apply_filters( 'helsinki_chat_path_to_php_file', array(
+		'features', 'settings', 'templates', 'form'
+	) );
 }
 
 function chat_settingsConfig( string $tab ) {
     return array(
-        'page' => PAGE_SLUG,
+        'page' => chat_settings_page_slug(),
         'section' => $tab,
     );
 }
@@ -59,22 +164,23 @@ function chat_sanitizeSettings( $option ) {
         $out = array();
         foreach ($option as $key => $value) {
             if (str_starts_with($key, 'wp_')) {
-                $out[$key] = wp_kses_post( $value );
+                $out[$key] = \wp_kses_post( $value );
             }
             else {
-                $out[$key] = sanitize_text_field( $value );
+                $out[$key] = \sanitize_text_field( $value );
             }
         }
         return $out;
     } else {
-        return sanitize_text_field( $option );
+        return \sanitize_text_field( $option );
     }
 }
 
 function chat_settings_defaults() {
-    $settings = get_option(PAGE_SLUG, array());
+    $settings = chat_settings();
+
     if (empty($settings)) {
-        $config = include PLUGIN_PATH . 'config/settings/options.php';
+        $config = chat_options_config();
         $defaults = array();
         foreach ($config as $tab) {
             foreach($tab as $section) {
@@ -85,13 +191,17 @@ function chat_settings_defaults() {
                 }
             }
         }
-        add_option(PAGE_SLUG, $defaults);
-    } 
+
+        update_chat_settings( $defaults );
+    }
 }
 
 function chat_register_settings() {
-    $settings = include PLUGIN_PATH . 'config/settings/options.php';
-    register_setting( PAGE_SLUG, PAGE_SLUG, 
+    $settings = chat_options_config();
+
+    \register_setting(
+		chat_settings_page_slug(),
+		chat_settings_page_slug(),
         array(
             'type' => 'array',
             'description' => '',
@@ -102,6 +212,7 @@ function chat_register_settings() {
             )
         )
     );
+
     foreach ($settings as $tab) {
         foreach($tab as $section) {
             chat_settings_add_section($section);
@@ -110,7 +221,20 @@ function chat_register_settings() {
 }
 
 function chat_settings_add_section($section) {
-    add_settings_section($section['id'], $section['name'], function() use ($section) { if (isset($section['description'])) { chat_settings_section_description($section['description']); } }, $section['page'], array('before_section' => '<div class="helsinki-chat-settings-section helsinki-chat-section-'. $section['id'] .'">', 'after_section' => '</div>'));
+    \add_settings_section(
+		$section['id'],
+		$section['name'],
+		function() use ($section) {
+			if ( isset($section['description']) ) {
+				chat_settings_section_description($section['description']);
+			}
+		},
+		$section['page'],
+		array(
+			'before_section' => '<div class="helsinki-chat-settings-section helsinki-chat-section-'. $section['id'] .'">', 'after_section' => '</div>',
+		)
+	);
+
     foreach ($section['options'] as $option) {
         chat_settings_add_option($option, $section['id'], $section['page']);
     }
@@ -125,7 +249,15 @@ function chat_settings_section_description($description) {
 
 function chat_settings_add_option($option, $section, $page) {
     $option['page'] = $page;
-    add_settings_field($option['id'], $option['name'], __NAMESPACE__ . '\\chat_settings_option_callback', $page, $section, $option);
+
+    \add_settings_field(
+		$option['id'],
+		$option['name'],
+		__NAMESPACE__ . '\\chat_settings_option_callback',
+		$page,
+		$section,
+		$option
+	);
 }
 
 function chat_settings_option_callback(array $args) {
@@ -142,7 +274,8 @@ function chat_settings_input(array $args) {
     }
 
     $option = '';
-    $settings = get_option(PAGE_SLUG, array());
+    $settings = chat_settings();
+
     if (isset($settings[$args['id']])) {
         $option = $settings[$args['id']];
     }
@@ -158,12 +291,12 @@ function chat_settings_input(array $args) {
             }
         }
         else if ($args['type'] === 'textarea' || $args['type'] === 'editor' || $args['type'] === 'select') {
-            $value = esc_attr($option);
+            $value = \esc_attr($option);
         }
         else {
             $value = sprintf(
                 'value="%s"',
-                esc_attr($option)
+                \esc_attr($option)
             );
         }
     }
@@ -195,7 +328,7 @@ function chat_settings_input(array $args) {
         );
     }
     else if ($args['type'] === 'editor') {
-        wp_editor(
+        \wp_editor(
             html_entity_decode($value),
             $args['id'],
             array(
@@ -218,7 +351,7 @@ function chat_settings_input(array $args) {
                 $args['id'] . '-' . $key,
                 $args['id'] . '-' . $key,
                 isset($settings[$args['id'].'-'.$key]) ? 'value="'.$settings[$args['id'].'-'.$key].'"' : ''
-            );    
+            );
         }
         printf(
             '%s',
@@ -260,20 +393,20 @@ function chat_settings_input(array $args) {
 
 function chat_register_polylang_strings() {
     if (function_exists('pll_register_string')) {
-        $config = include PLUGIN_PATH . 'config/settings/options.php';
-        $settings = get_option(PAGE_SLUG, array());
+        $config = chat_options_config();
+        $settings = chat_settings();
 
         foreach($config as $tab) {
             foreach($tab as $section) {
                 foreach($section['options'] as $option) {
                     if ($option['type'] === 'text') {
                         if (isset($settings[$option['id']])) {
-                            pll_register_string($option['id'], $settings[$option['id']], 'helsinki-chat', false);
+                            \pll_register_string($option['id'], $settings[$option['id']], 'helsinki-chat', false);
                         }
                     }
                     else if ($option['type'] === 'textarea' || $option['type'] === 'editor') {
                         if (isset($settings[$option['id']])) {
-                            pll_register_string($option['id'], $settings[$option['id']], 'helsinki-chat', true);
+                            \pll_register_string($option['id'], $settings[$option['id']], 'helsinki-chat', true);
                         }
                     }
                 }
