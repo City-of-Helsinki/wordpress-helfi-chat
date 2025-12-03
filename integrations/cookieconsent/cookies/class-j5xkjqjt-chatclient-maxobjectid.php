@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,29 +10,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CityOfHelsinki\WordPress\CookieConsent\Features\Interfaces\Known_Cookie_Data;
 
-final class Humany_Local_Storage implements Known_Cookie_Data
+final class J5XKjqJt_ChatClient_MaxObjectId implements Known_Cookie_Data
 {
 	public function issuer(): string
 	{
-		return 'Helsinki Chat';
+		return 'wds.ace.teliacompany.com';
 	}
 
 	public function name(): string
 	{
-		return 'humany_*';
+		return 'J5XKjqJt_chatClient_maxObjectId';
 	}
 
 	public function label(): string
 	{
-		return 'humany_*';
+		return 'J5XKjqJt_chatClient_maxObjectId';
 	}
 
 	public function descriptionTranslations(): array
 	{
 		return array(
-			'fi' => 'Humany-chatin käyttämä paikallinen tallennus.',
-			'sv' => 'Lokal lagring som används av Humany-chat.',
-			'en' => 'Local storage used by the Humany chat.',
+			'fi' => 'Tallentaa chat-asiakkaan suurimman objektin tunnisteen.',
+			'sv' => 'Lagrar chattklientens högsta objekt-ID.',
+			'en' => 'Stores chat client’s highest object ID.',
 		);
 	}
 

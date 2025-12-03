@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,29 +10,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CityOfHelsinki\WordPress\CookieConsent\Features\Interfaces\Known_Cookie_Data;
 
-final class J5XKjqJt_CGWebSDK_VideoClients implements Known_Cookie_Data
+final class Humany_Dash_Local_Storage implements Known_Cookie_Data
 {
 	public function issuer(): string
 	{
-		return 'wds.ace.teliacompany.com';
+		return 'Helsinki Chat';
 	}
 
 	public function name(): string
 	{
-		return 'J5XKjqJt_CGWebSDK_videoClients';
+		return 'humany_-*';
 	}
 
 	public function label(): string
 	{
-		return 'J5XKjqJt_CGWebSDK_videoClients';
+		return 'humany_-*';
 	}
 
 	public function descriptionTranslations(): array
 	{
 		return array(
-			'fi' => 'Tallentaa videopalvelun asiakkaat.',
-			'sv' => 'Lagrar klienter för videotjänsten.',
-			'en' => 'Stores video service clients.',
+			'fi' => 'Humany-chatin käyttämä paikallinen tallennus.',
+			'sv' => 'Lokal lagring som används av Humany-chat.',
+			'en' => 'Local storage used by the Humany chat.',
 		);
 	}
 

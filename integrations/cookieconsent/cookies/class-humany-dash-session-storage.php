@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CityOfHelsinki\WordPress\CookieConsent\Features\Interfaces\Known_Cookie_Data;
 
-final class Humany_Session_Storage implements Known_Cookie_Data
+final class Humany_Dash_Session_Storage implements Known_Cookie_Data
 {
 	public function issuer(): string
 	{
@@ -19,12 +19,12 @@ final class Humany_Session_Storage implements Known_Cookie_Data
 
 	public function name(): string
 	{
-		return 'humany_*';
+		return 'humany_-*';
 	}
 
 	public function label(): string
 	{
-		return 'humany_*';
+		return 'humany_-*';
 	}
 
 	public function descriptionTranslations(): array

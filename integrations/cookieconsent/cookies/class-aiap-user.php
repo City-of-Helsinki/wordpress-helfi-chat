@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CityOfHelsinki\WordPress\CookieConsent\Features\Interfaces\Known_Cookie_Data;
 
-final class Genesys_Widgets_Infocus implements Known_Cookie_Data
+final class Aiap_User implements Known_Cookie_Data
 {
 	public function issuer(): string
 	{
@@ -19,20 +19,20 @@ final class Genesys_Widgets_Infocus implements Known_Cookie_Data
 
 	public function name(): string
 	{
-		return '_genesys.widgets.inFocus';
+		return 'aiap-user';
 	}
 
 	public function label(): string
 	{
-		return '_genesys.widgets.inFocus';
+		return 'aiap-user';
 	}
 
 	public function descriptionTranslations(): array
 	{
 		return array(
-			'fi' => 'Käytetään chat-sovelluksen toimintaan. Säilyttää tiedon siitä, onko chat-sovellus käyttäjän näkökentässä.',
-			'sv' => 'Används för chattapplikationens funktion. Sparar information om chattapplikationen är i användarens fokus.',
-			'en' => 'Used for chat application functionality. Stores information about whether the chat application is in the user\'s focus.',
+			'fi' => 'Käytetään chat-sovelluksen toimintaan. Säilyttää käyttäjän suostumuksen chat-sovelluksen käyttöön.',
+			'sv' => 'Används för chattapplikationens funktion. Sparar användarens samtycke till användningen av chattapplikationen.',
+			'en' => 'Used for chat application functionality. Stores user consent for using the chat application.',
 		);
 	}
 

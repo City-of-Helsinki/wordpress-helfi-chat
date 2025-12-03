@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,7 +24,7 @@ function provide_cookies( array $cookies ): array {
 }
 
 function should_load_cookies(): bool {
-	$settings = \get_option( 'helsinki-chat-settings', array() );
+	$settings = \apply_filters( 'helsinki_chat_settings', array() );
 
 	return ! empty( $settings['chat-selection'] )
 		&& 'disabled' !== $settings['chat-selection'];

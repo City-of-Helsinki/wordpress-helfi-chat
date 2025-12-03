@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,44 +10,44 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CityOfHelsinki\WordPress\CookieConsent\Features\Interfaces\Known_Cookie_Data;
 
-final class ARRAffinity implements Known_Cookie_Data
+final class Humany_Session_Storage implements Known_Cookie_Data
 {
 	public function issuer(): string
 	{
-		return '.hel.humany.net';
+		return 'Helsinki Chat';
 	}
 
 	public function name(): string
 	{
-		return 'ARRAffinity';
+		return 'humany_*';
 	}
 
 	public function label(): string
 	{
-		return 'ARRAffinity';
+		return 'humany_*';
 	}
 
 	public function descriptionTranslations(): array
 	{
 		return array(
-			'fi' => 'Käytetään Humany-chatin palvelinistunnon kuormantasaukseen.',
-			'sv' => 'Används för lastbalansering av Humany-chattens server-session.',
-			'en' => 'Used for load balancing of the Humany chat server session.',
+			'fi' => 'Humany-chatin käyttämä paikallinen tallennus.',
+			'sv' => 'Lokal lagring som används av Humany-chat.',
+			'en' => 'Local storage used by the Humany chat.',
 		);
 	}
 
 	public function retentionTranslations(): array
 	{
 		return array(
-			'fi' => 'Istunto',
-			'sv' => 'Session',
-			'en' => 'Session'
+			'fi' => '-',
+			'sv' => '-',
+			'en' => '-'
 		);
 	}
 
 	public function type(): string
 	{
-		return 'cookie';
+		return 'sessionstorage';
 	}
 
 	public function category(): string

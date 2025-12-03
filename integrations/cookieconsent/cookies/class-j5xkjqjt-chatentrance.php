@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CityOfHelsinki\WordPress\Chat\Integrations\WPHelfiCookieConsent\Cookies;
+namespace CityOfHelsinki\WordPress\Chat\Integrations\CookieConsent\Cookies;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use CityOfHelsinki\WordPress\CookieConsent\Features\Interfaces\Known_Cookie_Data;
 
-final class J5XKjqJt_CGWebSDK_VideoShower implements Known_Cookie_Data
+final class J5XKjqJt_ChatEntrance implements Known_Cookie_Data
 {
 	public function issuer(): string
 	{
@@ -19,20 +19,20 @@ final class J5XKjqJt_CGWebSDK_VideoShower implements Known_Cookie_Data
 
 	public function name(): string
 	{
-		return 'J5XKjqJt_CGWebSDK_videoShower';
+		return 'J5XKjqJt_chatEntrance';
 	}
 
 	public function label(): string
 	{
-		return 'J5XKjqJt_CGWebSDK_videoShower';
+		return 'J5XKjqJt_chatEntrance';
 	}
 
 	public function descriptionTranslations(): array
 	{
 		return array(
-			'fi' => 'Tallentaa videoikkunan tiedot.',
-			'sv' => 'Lagrar information om video fönstret.',
-			'en' => 'Stores video window information.',
+			'fi' => 'Tallentaa chatin sisäänkäyntitiedot.',
+			'sv' => 'Lagrar inmatningsinformation för chatten.',
+			'en' => 'Stores chat entrance information.',
 		);
 	}
 
