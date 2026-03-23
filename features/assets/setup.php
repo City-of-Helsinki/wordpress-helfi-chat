@@ -18,5 +18,4 @@ function loaded(): void {
 
 	\add_action( 'wp_enqueue_scripts', array( $assets, 'publicStyles' ), 2 );
 	\add_action( 'wp_enqueue_scripts', array( $assets, 'chatScripts' ), 1 );
-	\add_filter( 'script_loader_tag', array( $assets, 'filterScript' ), 10, 3 );
 }
