@@ -20,7 +20,11 @@ return array(
                         array(
                             'name' => 'Telia Ace',
                             'value' => 'telia-ace'
-                        )
+                        ),
+                        array(
+                            'name' => 'Telia Ace + IBM',
+                            'value' => 'telia-ace-ibm'
+                        ),
                     )
                 ),
                 array(
@@ -85,5 +89,28 @@ return array(
                 ),
             ),
         )
-    )
+    ),
+	'genesys-watson' => array(
+        array(
+            'id' => 'chat-genesys-watson',
+            'name' => __('Settings', 'helsinki-chat'),
+            'page' => 'helsinki-chat-settings',
+            'description' => __('Configure the chat service\'s parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
+            'options' => array(
+                array(
+                    'id' => 'chat-genesys-watson-identifier',
+                    'name' => __('Chat identifiers', 'helsinki-chat'),
+                    'type' => 'multiple-text',
+                    'description' => '',
+                    'fields' => array(
+                        'hostname' => 'hostname',
+                        'engagementId' => 'engagementId',
+                        'tenantId' => 'tenantId',
+                        'assistantId' => 'assistantId',
+                    )
+                ),
+
+            ),
+        ),
+    ),
 );
