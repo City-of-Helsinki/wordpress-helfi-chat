@@ -23,7 +23,34 @@ function chat_settings_page_slug(): string {
 }
 
 function chat_settings(): array {
-	return \get_option( chat_settings_page_slug(), array() );
+	return with_legacy_chat_settings_migration(
+		\get_option( chat_settings_page_slug(), array() )
+	);
+}
+
+function with_legacy_chat_settings_migration( array $settings ): array {
+	if (
+		isset( $settings['chat-selection'] )
+		&& 'genesys-watson' === $settings['chat-selection']
+	) {
+		$fields = array(
+			'hostname',
+			'engagementId',
+			'tenantId',
+			'assistantId',
+		);
+
+		foreach ( $fields as $field ) {
+			$prev_key = sprintf( 'chat-genesys-watson-identifier-%s', $field );
+			$new_key = sprintf( 'chat-telia-ace-ibm-identifier-%s', $field );
+
+			$settings[$new_key] = $settings[$prev_key] ?? '';
+		}
+
+		$settings['chat-selection'] = 'telia-ace-ibm';
+	}
+
+	return $settings;
 }
 
 function update_chat_settings( array $settings ): bool {
