@@ -19,10 +19,10 @@ const DIST = {
   //   scripts: 'assets/common/js',
   //   styles: 'assets/common/css',
   // },
-  public: {
+  // public: {
     // scripts: 'assets/public/js',
-    styles: 'assets/public/css',
-  },
+    // styles: 'assets/public/css',
+  // },
 };
 
 const SOURCE = {
@@ -34,10 +34,10 @@ const SOURCE = {
   //   scripts: 'src/common/js/**/*.js',
   //   styles: 'src/common/scss/**/*.scss',
   // },
-  public: {
+  // public: {
     // scripts: 'src/public/js/**/*.js',
-    styles: 'src/public/scss/**/*.scss',
-  },
+    // styles: 'src/public/scss/**/*.scss',
+  // },
 };
 
 const sass = gulpSass(dartSass);
@@ -81,7 +81,7 @@ gulp.task('adminStyles', () => handleStyles('admin'));
 // gulp.task('commonStyles', () => handleStyles('common'));
 
 // gulp.task('publicScripts', () => handleScripts('public'));
-gulp.task('publicStyles', () => handleStyles('public'));
+// gulp.task('publicStyles', () => handleStyles('public'));
 
 gulp.task('watchAdmin',function() {
   gulp.watch(SOURCE.admin.styles, gulp.parallel('adminStyles'));
@@ -94,7 +94,7 @@ gulp.task('watchAdmin',function() {
 // });
 
 gulp.task('watchPublic',function() {
-  gulp.watch(SOURCE.public.styles, gulp.parallel('publicStyles'));
+  // gulp.watch(SOURCE.public.styles, gulp.parallel('publicStyles'));
   // gulp.watch(SOURCE.public.scripts, gulp.parallel('publicScripts'));
 });
 
@@ -103,7 +103,7 @@ gulp.task('watch',function() {
   gulp.watch(SOURCE.admin.scripts, gulp.parallel('adminScripts'));
   // gulp.watch(SOURCE.common.styles, gulp.parallel('commonStyles'));
   // gulp.watch(SOURCE.common.scripts, gulp.parallel('commonScripts'));
-  gulp.watch(SOURCE.public.styles, gulp.parallel('publicStyles'));
+  // gulp.watch(SOURCE.public.styles, gulp.parallel('publicStyles'));
   // gulp.watch(SOURCE.public.scripts, gulp.parallel('publicScripts'));
 });
 
@@ -112,6 +112,6 @@ gulp.task('default', gulp.parallel(
   'adminScripts',
   // 'commonStyles',
   // 'commonScripts',
-  'publicStyles',
+  // 'publicStyles',
   // 'publicScripts'
 ));
