@@ -7,13 +7,11 @@ A plugin designed for integrating various chat services into the [Helsinki Theme
 - None
 
 ## Integrated Chat Services
-- Genesys v9
+- Telia ACE
 
 
 ## Configuration
 After installation a chat service can be configured to be used from the `Helsinki Chat` admin submenu.
-
-Available settings for a chat may differ between chat services. Currently the only chat service available is Genesys v9.
 
 This plugin is not intended to provide the endpoints required to setup a chat service. You will have to contact the chat service provider for the required information to setup and use the chat.
 
