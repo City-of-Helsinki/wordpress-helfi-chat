@@ -5,6 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'assets' => 'setup',
 	'settings' => 'setup',
+	'providers' => 'setup',
 );
