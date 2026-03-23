@@ -90,15 +90,15 @@ return array(
             ),
         )
     ),
-	'genesys-watson' => array(
+	'telia-ace-ibm' => array(
         array(
-            'id' => 'chat-genesys-watson',
+            'id' => 'chat-telia-ace-ibm',
             'name' => __('Settings', 'helsinki-chat'),
             'page' => 'helsinki-chat-settings',
             'description' => __('Configure the chat service\'s parameters. Please request the chat-service provider for the information to the fields below.', 'helsinki-chat'),
             'options' => array(
                 array(
-                    'id' => 'chat-genesys-watson-identifier',
+                    'id' => 'chat-telia-ace-ibm-identifier',
                     'name' => __('Chat identifiers', 'helsinki-chat'),
                     'type' => 'multiple-text',
                     'description' => '',
