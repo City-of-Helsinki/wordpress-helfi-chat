@@ -14,6 +14,8 @@ class Chat_Provider_Factory
 	{
 		$this->providers = array(
 			'telia-ace' => Telia_Ace_Chat::class,
+			'telia-ace-ibm' => Telia_Ace_IBM_Chat::class,
+			'genesys-watson' => Telia_Ace_IBM_Chat::class, // backwards compatibility
 		);
 	}
 
