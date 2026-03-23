@@ -14,7 +14,6 @@ function loaded(): void {
 
 	\add_action( 'helsinki_chat_settings_tab_panel', __NAMESPACE__ . '\\chat_renderTabPanel' );
 	\add_action( 'helsinki_chat_init', __NAMESPACE__ . '\\chat_settings_defaults');
-	//add_action( 'helsinki_chat_init', __NAMESPACE__ . '\\chat_register_polylang_strings');
 
 	\add_filter( 'helsinki_chat_settings', __NAMESPACE__ . '\\chat_settings' );
 }
@@ -279,9 +278,7 @@ function chat_settings_input(array $args) {
     if (isset($settings[$args['id']])) {
         $option = $settings[$args['id']];
     }
-    /*if (empty($option) && isset($args['default'])) {
-        $option = $args['default'];
-    }*/
+
     $value = '';
 
     if (isset($option)) {
@@ -388,29 +385,5 @@ function chat_settings_input(array $args) {
             $value,
             $description
         );
-    }
-}
-
-function chat_register_polylang_strings() {
-    if (function_exists('pll_register_string')) {
-        $config = chat_options_config();
-        $settings = chat_settings();
-
-        foreach($config as $tab) {
-            foreach($tab as $section) {
-                foreach($section['options'] as $option) {
-                    if ($option['type'] === 'text') {
-                        if (isset($settings[$option['id']])) {
-                            \pll_register_string($option['id'], $settings[$option['id']], 'helsinki-chat', false);
-                        }
-                    }
-                    else if ($option['type'] === 'textarea' || $option['type'] === 'editor') {
-                        if (isset($settings[$option['id']])) {
-                            \pll_register_string($option['id'], $settings[$option['id']], 'helsinki-chat', true);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
